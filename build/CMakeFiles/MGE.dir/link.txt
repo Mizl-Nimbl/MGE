@@ -1,0 +1,1 @@
+/usr/bin/c++ -g CMakeFiles/MGE.dir/main.cpp.o CMakeFiles/MGE.dir/glad.c.o -o MGE  /usr/lib/x86_64-linux-gnu/libGL.so /usr/lib/x86_64-linux-gnu/libglfw.so.3.3 
