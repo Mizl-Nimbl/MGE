@@ -157,7 +157,6 @@ void Render::render(GLFWwindow* window)
         g.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
-
     //draw
     glfwSwapBuffers(window);
     glfwPollEvents();

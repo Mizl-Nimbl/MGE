@@ -49,6 +49,7 @@ bool Systems::initialize()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_DEPTH_TEST);  
     //use shaders
+    
     g.initshader("/home/mizl/Documents/MGE/shaders/main.vert", "/home/mizl/Documents/MGE/shaders/main.frag");
     return true;
 }
