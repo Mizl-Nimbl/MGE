@@ -3,7 +3,17 @@
 
 bool Systems::initialize()
 {
-    glfwInit();
+    setenv("GLFW_PLATFORM", "wayland", 1);
+    const char* glfwError;
+    glfwSetErrorCallback([](int error, const char* description) 
+    {
+        std::cerr << "GLFW Error (" << error << "): " << description << std::endl;
+    });
+    if (!glfwInit()) 
+    {
+        std::cout << "Failed to initialize GLFW" << std::endl;
+        return false;
+    }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -39,7 +49,11 @@ bool Systems::initialize()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_DEPTH_TEST);  
     //use shaders
+<<<<<<< HEAD
     g.initshader("../shaders/main.vert", "../shaders/main.frag");
+=======
+    g.initshader("/home/mizl/Documents/MGE/shaders/main.vert", "/home/mizl/Documents/MGE/shaders/main.frag");
+>>>>>>> dca8455 (initial commit)
     return true;
 }
 

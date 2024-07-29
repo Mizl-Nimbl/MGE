@@ -2,6 +2,14 @@
 
 void Render::render(GLFWwindow* window)
 {
+<<<<<<< HEAD
+=======
+    int once = 0;
+    if (once = 0)
+    {
+        once++;
+    }
+>>>>>>> dca8455 (initial commit)
     //calculate camera
     yaw   += s.xoffset;
     pitch += s.yoffset;
@@ -86,6 +94,22 @@ void Render::render(GLFWwindow* window)
         1, 2, 3
     };
 
+<<<<<<< HEAD
+=======
+    glm::vec3 cubePositions[] = {
+        glm::vec3( 0.0f, 0.0f, 0.0f),
+        glm::vec3( 2.0f, 5.0f,-15.0f),
+        glm::vec3(-1.5f,-2.2f,-2.5f),
+        glm::vec3(-3.8f,-2.0f,-12.3f),
+        glm::vec3( 2.4f,-0.4f,-3.5f),
+        glm::vec3(-1.7f, 3.0f,-7.5f),
+        glm::vec3( 1.3f,-2.0f,-2.5f),
+        glm::vec3( 1.5f, 2.0f,-2.5f),
+        glm::vec3( 1.5f, 0.2f,-1.5f),
+        glm::vec3(-1.3f, 1.0f,-1.5f)
+    };
+
+>>>>>>> dca8455 (initial commit)
     glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
     //transformations
@@ -121,21 +145,27 @@ void Render::render(GLFWwindow* window)
     glBindVertexArray(s.VAO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s.EBO);
     
+    unsigned int texture0 = t.initTexture("/home/mizl/Documents/MGE/textures/container2.png");
+    unsigned int texture1 = t.initTexture("/home/mizl/Documents/MGE/textures/container2_specular.png");
+
     glActiveTexture(GL_TEXTURE0);
-    unsigned int texture0 = t.initTexture("../textures/container2.png");
     glBindTexture(GL_TEXTURE_2D, texture0);
 
-    
     glActiveTexture(GL_TEXTURE1);
-    unsigned int texture1 = t.initTexture("../textures/container2_specular.png");
     glBindTexture(GL_TEXTURE_2D, texture1);
 
+    for (int i = 0; i < 10; i++)
+    {
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, cubePositions[i]);
+        float angle = 20.0f * i;
+        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+        g.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+
     //draw
-    model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f,  0.0f,  0.0f));
-    model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.3f, 0.5f));
-    g.setMat4("model", model);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
     glfwSwapBuffers(window);
     glfwPollEvents();
+    GLenum err;
 }

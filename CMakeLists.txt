@@ -1,16 +1,24 @@
 cmake_minimum_required(VERSION 3.7.0)
+set(CMAKE_TRY_COMPILE_TARGET_TYPE "STATIC_LIBRARY")
 project(MGE VERSION 0.1.0 LANGUAGES C CXX)
 
 find_package(OpenGL REQUIRED)
 find_package(glm REQUIRED)
 find_package(glfw3 3.3 REQUIRED)
+find_library(GLAD_LIBRARY glad PATHS /nix/store)
 
 include_directories(${OPENGL_INCLUDE_DIRS} ${GLFW_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/include)
+
+add_subdirectory(input)
+add_subdirectory(render)
+add_subdirectory(shaders)
+add_subdirectory(systems)
+add_subdirectory(textures)
 
 include(CTest)
 enable_testing()
 
-add_executable(MGE "main.cpp" "glad.c")
+add_executable(MGE "main.cpp")
 
 set_property(TARGET MGE PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "~/Documents/MGE")
 
@@ -21,3 +29,4 @@ set(BUILD_STATIC_LIB ON)
 target_link_libraries(MGE OpenGL::GL)
 target_link_libraries(MGE glm::glm)
 target_link_libraries(MGE glfw)
+target_link_libraries(MGE ${GLAD_LIBRARY})

@@ -52,14 +52,17 @@ void Shader::initshader(const char* vertpath, const char* fragpath)
 
 const char* Shader::readShader(const char* shaderPath)
 {
-    std::ifstream shaderFile;
-    shaderFile.open(shaderPath);
+    std::ifstream shaderFile(shaderPath);
+    if (!shaderFile.is_open()) {
+        std::cerr << "Failed to open shader file: " << shaderPath << std::endl;
+    }
     std::stringstream shaderStream;
     shaderStream << shaderFile.rdbuf();
     shaderFile.close();
     std::string shaderCodeStr = shaderStream.str();
     char* shaderCode = new char[shaderCodeStr.size() + 1];
     std::copy(shaderCodeStr.begin(), shaderCodeStr.end(), shaderCode);
+    shaderCode[shaderCodeStr.size()] = '\0';
     return shaderCode;
 }
 
