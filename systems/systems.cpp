@@ -76,6 +76,4 @@ void Systems::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     
     s.xoffset *= s.sensitivity;
     s.yoffset *= s.sensitivity;
-
-    std::cout << s.xoffset << std::endl;
 }
