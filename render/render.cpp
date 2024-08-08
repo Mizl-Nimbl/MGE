@@ -125,14 +125,25 @@ void Render::render(GLFWwindow* window)
     g.setVec3("material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
     g.setFloat("material.shininess", 32.0f);
 
-    g.setVec3("light.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
-    g.setVec3("light.diffuse", glm::vec3(0.5f, 0.5f, 0.5f));
-    g.setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
-    g.setVec3("light.position", glm::vec3(1.0f, 1.0f, 1.0f));
+    //lights starting here
+    g.setInt("light[0].type", 1);
+    g.setVec3("light[0].ambient", glm::vec3(0.05f, 0.05f, 0.05f));
+    g.setVec3("light[0].diffuse", glm::vec3(0.9f, 0.3f, 0.3f));
+    g.setVec3("light[0].specular", glm::vec3(1.0f, 1.0f, 1.0f));
+    g.setVec3("light[0].position", glm::vec3(1.0f, 1.0f, 1.0f));
+    g.setFloat("light[0].constant",  1.0f);
+    g.setFloat("light[0].linear",    0.09f);
+    g.setFloat("light[0].quadratic", 0.032f);
 
-    g.setFloat("light.constant",  1.0f);
-    g.setFloat("light.linear",    0.09f);
-    g.setFloat("light.quadratic", 0.032f);	
+    g.setInt("light[1].type", 1);
+    g.setVec3("light[1].ambient", glm::vec3(0.05f, 0.05f, 0.05f));
+    g.setVec3("light[1].diffuse", glm::vec3(0.3f, 0.3f, 0.9f));
+    g.setVec3("light[1].specular", glm::vec3(1.0f, 1.0f, 1.0f));
+    g.setVec3("light[1].position", glm::vec3(-1.0f, -1.0f, -1.0f));
+    g.setFloat("light[1].constant",  1.0f);
+    g.setFloat("light[1].linear",    0.09f);
+    g.setFloat("light[1].quadratic", 0.032f);
+    //lights ending here
 
     //bind
     glBindVertexArray(s.lightVAO);

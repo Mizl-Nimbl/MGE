@@ -25,10 +25,10 @@ public:
     unsigned int lightVAO;
     unsigned int EBO;
     GLFWwindow* window;
-    int windoww = 800;
-    int windowh = 600;
+    int windoww = 1280;
+    int windowh = 720;
     float lastX = windoww/2, lastY = windowh/2;
-    float sensitivity = 0.2f;
+    float sensitivity = 0.4f;
     float xoffset;
     float yoffset;
     bool firstMouse;
