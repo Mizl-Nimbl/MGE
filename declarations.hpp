@@ -6,11 +6,15 @@ class Render;
 class Input;
 class Shader;
 class Textures;
+class Mesh;
+class Model;
 
 extern Systems s;
 extern Render r;
 extern Input i;
 extern Shader g;
 extern Textures t;
+extern Mesh h;
+extern Model n;
 
 #endif /* declarations_hpp */

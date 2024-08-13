@@ -15,6 +15,7 @@ add_subdirectory(render)
 add_subdirectory(shaders)
 add_subdirectory(systems)
 add_subdirectory(textures)
+add_subdirectory(mesh)
 
 include(CTest)
 enable_testing()

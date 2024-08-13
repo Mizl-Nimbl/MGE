@@ -47,10 +47,12 @@ bool Systems::initialize()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     //draw mode
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    glEnable(GL_DEPTH_TEST);  
+    glEnable(GL_DEPTH_TEST);
     //use shaders
-    
-    g.initshader("/home/mizl/Documents/MGE/shaders/main.vert", "/home/mizl/Documents/MGE/shaders/main.frag");
+    g.initshader("/home/mizl/Documents/MGE/assets/shaders/main.vert", "/home/mizl/Documents/MGE/assets/shaders/main.frag");
+    //load models
+    n.initModel("/home/mizl/Documents/MGE/assets/models/test/test.obj");
+    //n.initModel("/home/mizl/Documents/MGE/assets/models/backpack/backpack.obj");
     return true;
 }
 

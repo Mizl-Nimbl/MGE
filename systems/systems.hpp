@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 
 /* NEVER ADD "#include ../render/render.hpp" here. biggest waste of 1 hour ever. */
+#include "../model/model.hpp"
 #include "../shaders/shader.hpp"
 #include "../declarations.hpp"
 

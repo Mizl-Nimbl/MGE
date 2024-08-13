@@ -7,6 +7,8 @@ Input i;
 Render r;
 Shader g;
 Textures t;
+Mesh h;
+Model n;
 
 int main() 
 {
@@ -14,7 +16,7 @@ int main()
     {
         m.running = true;
         //this code needs to be HERE and NOT in s.initialize
-        std::string vertexshadersource = g.readShader("/home/mizl/Documents/MGE/shaders/main.vert");
+        std::string vertexshadersource = g.readShader("/home/mizl/Documents/MGE/assets/shaders/main.vert");
         unsigned int vertexShader;
         vertexShader = glCreateShader(GL_VERTEX_SHADER);
         g.setMat4("proj", r.proj);
