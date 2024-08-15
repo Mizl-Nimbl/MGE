@@ -26,6 +26,7 @@ public:
     unsigned int VAO;
     unsigned int lightVAO;
     unsigned int EBO;
+    unsigned int FBO;
     GLFWwindow* window;
     int windoww = 1280;
     int windowh = 720;

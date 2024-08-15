@@ -11,8 +11,8 @@ void Render::render(GLFWwindow* window)
     yaw   += s.xoffset;
     pitch += s.yoffset;
 
-    s.xoffset *= 0.5;
-    s.yoffset *= 0.5;
+    s.xoffset *= 0.7;
+    s.yoffset *= 0.7;
 
     if(pitch > 89.0f)
     {
@@ -51,7 +51,7 @@ void Render::render(GLFWwindow* window)
     g.setVec3("material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
     g.setFloat("material.shininess", 32.0f);
 
-    //lights starting here
+    /*
     g.setInt("light[0].type", 1);
     g.setVec3("light[0].ambient", glm::vec3(0.05f, 0.05f, 0.05f));
     g.setVec3("light[0].diffuse", glm::vec3(0.5f, 0.1f, 0.1f));
@@ -69,6 +69,11 @@ void Render::render(GLFWwindow* window)
     g.setFloat("light[1].constant",  1.0f);
     g.setFloat("light[1].linear",    0.09f);
     g.setFloat("light[1].quadratic", 0.032f);
+    */
+
+    //lights starting here
+    setPointLight(g, 0, 245, 86, 12, 69, glm::vec3(2.0f, 3.0f, 0.0f), 1.0f, 0.09f, 0.032f);
+    setSpotLight(g, 1, 171, 188, 224, 100, cameraPos, cameraFront, glm::cos(glm::radians(17.5f)), glm::cos(glm::radians(25.0f)), 1.0f, 0.09f, 0.032f);
     //lights ending here
     
     /*
@@ -82,10 +87,11 @@ void Render::render(GLFWwindow* window)
     glBindTexture(GL_TEXTURE_2D, texture1);
     */
 
+    //Model
     for (int i = 0; i < s.models.size(); i++)
     {
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(i * 4, 0.0f, -3.0f));
+        model = glm::translate(model, glm::vec3(i * 4.0f, 0.0f, -3.0f));
         float angle = 180.0f * i;
         model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
         g.setMat4("model", model);
@@ -95,4 +101,52 @@ void Render::render(GLFWwindow* window)
     glfwSwapBuffers(window);
     glfwPollEvents();
     GLenum err;
+}
+
+void Render::setDirectionalLight(Shader g, int i, int re, int gr, int bl, int al, glm::vec3 direction, glm::vec3 specular)
+{
+    float bright = (al / 255.0f);
+    float red    = (re / 255.0f) * bright;
+    float green  = (gr / 255.0f) * bright;
+    float blue   = (bl / 255.0f) * bright;
+    g.setInt("light[" + std::to_string(i) + "].type", 0);
+    g.setVec3("light[" + std::to_string(i) + "].direction", direction);
+    g.setVec3("light[" + std::to_string(i) + "].ambient", glm::vec3(red * 0.025f , green * 0.025f, blue * 0.025f));
+    g.setVec3("light[" + std::to_string(i) + "].diffuse", glm::vec3(red, green, blue));
+    g.setVec3("light[" + std::to_string(i) + "].specular", glm::vec3(red, green, blue));
+}
+
+void Render::setPointLight(Shader g, int i, int re, int gr, int bl, int al, glm::vec3 position, float constant, float linear, float quadratic)
+{
+    float bright = (al / 255.0f);
+    float red    = (re / 255.0f) * bright;
+    float green  = (gr / 255.0f) * bright;
+    float blue   = (bl / 255.0f) * bright;
+    g.setInt("light[" + std::to_string(i) + "].type", 1);
+    g.setVec3("light[" + std::to_string(i) + "].ambient", glm::vec3(red * 0.025f , green * 0.025f, blue * 0.025f));
+    g.setVec3("light[" + std::to_string(i) + "].diffuse", glm::vec3(red, green, blue));
+    g.setVec3("light[" + std::to_string(i) + "].specular", glm::vec3(red, green, blue));
+    g.setVec3("light[" + std::to_string(i) + "].position", position);
+    g.setFloat("light[" + std::to_string(i) + "].constant", constant);
+    g.setFloat("light[" + std::to_string(i) + "].linear", linear);
+    g.setFloat("light[" + std::to_string(i) + "].quadratic", quadratic);
+}
+
+void Render::setSpotLight(Shader g, int i, int re, int gr, int bl, int al, glm::vec3 position, glm::vec3 direction, float cutOff, float outerCutOff, float constant, float linear, float quadratic)
+{
+    float bright = (al / 255.0f);
+    float red    = (re / 255.0f) * bright;
+    float green  = (gr / 255.0f) * bright;
+    float blue   = (bl / 255.0f) * bright;
+    g.setInt("light[" + std::to_string(i) + "].type", 2);
+    g.setVec3("light[" + std::to_string(i) + "].ambient", glm::vec3(red * 0.025f , green * 0.025f, blue * 0.025f));
+    g.setVec3("light[" + std::to_string(i) + "].diffuse", glm::vec3(red, green, blue));
+    g.setVec3("light[" + std::to_string(i) + "].specular", glm::vec3(red, green, blue));
+    g.setVec3("light[" + std::to_string(i) + "].position", position);
+    g.setVec3("light[" + std::to_string(i) + "].direction", direction);
+    g.setFloat("light[" + std::to_string(i) + "].cutOff", cutOff);
+    g.setFloat("light[" + std::to_string(i) + "].outerCutOff", outerCutOff);
+    g.setFloat("light[" + std::to_string(i) + "].constant", constant);
+    g.setFloat("light[" + std::to_string(i) + "].linear", linear);
+    g.setFloat("light[" + std::to_string(i) + "].quadratic", quadratic);
 }

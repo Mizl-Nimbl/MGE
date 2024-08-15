@@ -10,7 +10,7 @@ void Input::processInput(GLFWwindow* window)
     {
         glfwSetWindowShouldClose(window, true);
     }
-    float cameraSpeed = 2.5f * deltaTime; //adjust
+    float cameraSpeed = 3.0f * deltaTime; //adjust
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
         r.cameraPos += cameraSpeed * r.cameraFront;
