@@ -14,6 +14,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 class Systems
 {
@@ -33,6 +34,7 @@ public:
     float xoffset;
     float yoffset;
     bool firstMouse;
+    std::vector <Model> models;
 private:
 };
 

@@ -36,11 +36,11 @@ public:
 
     Mesh();
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-    void Draw();
+    void Draw(std::vector<Texture> meshtextures);
 private:
     unsigned int VAO, VBO, EBO;
     void setupMesh();
-    std::vector<Texture> textures_loaded; 
+    std::vector<Texture> textures_loaded;
 };
 
 #endif /* mesh_hpp */

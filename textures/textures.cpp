@@ -2,6 +2,10 @@
 
 unsigned int Textures::initTexture(const char* texturepath)
 {
+    if (textureCache.find(texturepath) != textureCache.end())
+    {
+        return textureCache[texturepath];
+    }
     unsigned int texture;
     stbi_set_flip_vertically_on_load(true);
     glGenTextures(1, &texture);

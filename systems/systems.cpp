@@ -51,8 +51,10 @@ bool Systems::initialize()
     //use shaders
     g.initshader("/home/mizl/Documents/MGE/assets/shaders/main.vert", "/home/mizl/Documents/MGE/assets/shaders/main.frag");
     //load models
-    n.initModel("/home/mizl/Documents/MGE/assets/models/test/test.obj");
-    //n.initModel("/home/mizl/Documents/MGE/assets/models/backpack/backpack.obj");
+    Model backpack("/home/mizl/Documents/MGE/assets/models/backpack/backpack.obj");
+    Model test("/home/mizl/Documents/MGE/assets/models/test/test.obj");
+    models.push_back(backpack);
+    models.push_back(test);
     return true;
 }
 

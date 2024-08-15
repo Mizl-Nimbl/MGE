@@ -82,14 +82,14 @@ void Render::render(GLFWwindow* window)
     glBindTexture(GL_TEXTURE_2D, texture1);
     */
 
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < s.models.size(); i++)
     {
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
-        float angle = 20.0f * i;
+        model = glm::translate(model, glm::vec3(i * 4, 0.0f, -3.0f));
+        float angle = 180.0f * i;
         model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
         g.setMat4("model", model);
-        n.Draw();
+        n.DrawModel(s.models.at(i));
     }
     //draw
     glfwSwapBuffers(window);

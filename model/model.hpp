@@ -17,25 +17,30 @@
 #include "../mesh/mesh.hpp"
 #include "../shaders/shader.hpp"
 #include "../textures/textures.hpp"
+#include "../systems/systems.hpp"
 #include "../declarations.hpp"
 
 class Model
 {
 public:
-    void initModel(std::string const &path)
+    Model() = default;
+    Model(std::string const &path)
     {
         loadModel(path);
+    }
+    void DrawModel(Model model)
+    {
+        model.Draw();
     }
     void Draw();
 private:
     std::vector<Mesh> meshes;
     std::vector<Texture> textures_loaded;
-    const char* directory;
+    std::string directory;
     void loadModel(std::string const &path);
     void processNode(aiNode *node, const aiScene *scene);
     Mesh processMesh(aiMesh *mesh, const aiScene *scene);
     std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, const char* typeName);
-    bool isTextureLoaded(const std::vector<Texture>& textures_loaded, const aiString& str, Texture& outTexture);
 };
 
 #endif /* model_hpp */

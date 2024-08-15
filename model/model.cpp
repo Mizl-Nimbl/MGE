@@ -2,14 +2,17 @@
 
 void Model::Draw()
 {
+    std::vector<Texture> modeltextures = textures_loaded;
     for(unsigned int i = 0; i < meshes.size(); i++)
     {
-        meshes[i].Draw();
+        meshes[i].Draw(modeltextures);
     }
 } 
 
 void Model::loadModel(std::string const &path)
 {
+    meshes.clear();
+    textures_loaded.clear();
     Assimp::Importer importer;
     const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
@@ -76,7 +79,9 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
     {
         aiFace face = mesh->mFaces[i];
         for(unsigned int j = 0; j < face.mNumIndices; j++)
+        {
             indices.push_back(face.mIndices[j]);
+        }
     }
 
     if(mesh->mMaterialIndex >= 0)
@@ -98,13 +103,16 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
     for(unsigned int i = 0; i < mat->GetTextureCount(type); i++)
     {
         aiString str;
-        mat->GetTexture(type, i, &str);
         Texture texture;
-        if (textures_loaded.size() > 0) {
+        mat->GetTexture(type, i, &str);
+        bool textureLoaded = false;
+        if (textures_loaded.size() > i) {
             textures.push_back(texture);
-            std::cout << "Texture already loaded" << std::endl;
+            //std::cout << "Texture already loaded" << std::endl;
+            textureLoaded = true;
             continue;
         }
+
         // if texture hasn't been loaded already, load it
         std::string fullPath = std::string(directory) + '/' + str.C_Str();
         std::cout << "Loading texture from path: " << fullPath << std::endl;
@@ -124,5 +132,5 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
         textures.push_back(texture);
         textures_loaded.push_back(texture); // add to loaded textures
     }
-    return textures_loaded;
+    return textures;
 }

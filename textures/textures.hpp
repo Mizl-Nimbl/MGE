@@ -8,6 +8,7 @@
 #include "../include/stb/stb_image.h"
 #include "../declarations.hpp"
 
+#include <unordered_map>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -18,6 +19,7 @@ class Textures
 public:
     unsigned int initTexture(const char* texturepath);
 private:
+    std::unordered_map<std::string, unsigned int> textureCache;
 };
 
 #endif /* textures_hpp */
