@@ -16,6 +16,9 @@
 class Render
 {
 public:
+    Render();
+    ~Render();
+    void initializeshaders();
     void render(GLFWwindow* window);
     void setDirectionalLight(Shader g, int i, int re, int gr, int bl, int al, glm::vec3 direction, glm::vec3 specular);
     void setPointLight(Shader g, int i, int re, int gr, int bl, int al, glm::vec3 position, float constant, float linear, float quadratic);
@@ -35,6 +38,7 @@ public:
     float yaw = -90.0f;
     float pitch = 0.0f;
 private:
+    Shader* mainshader;
 };
 
 #endif /* render_hpp */

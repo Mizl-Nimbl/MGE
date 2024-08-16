@@ -1,8 +1,9 @@
 #include "shader.hpp"
 
-void Shader::initshader(const char* vertpath, const char* fragpath)
+Shader::Shader(const char* vertpath, const char* fragpath)
 {
     //shader
+    std::cout << "Initializing Shader with vertex path: " << vertpath << " and fragment path: " << fragpath << std::endl;
     int  success;
     char infoLog[512];
     const char* vertexShaderSource = readShader(vertpath);
@@ -11,10 +12,11 @@ void Shader::initshader(const char* vertpath, const char* fragpath)
     {
         std::cerr << "Failed to read shader files." << std::endl;
     }
+    std::cout << "shader files read" << std::endl;
 
     //vertex shader
     unsigned int vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    vertexShader = glCreateShader(GL_VERTEX_SHADER); //this line is segfaulting
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
     glCompileShader(vertexShader);
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
@@ -45,9 +47,8 @@ void Shader::initshader(const char* vertpath, const char* fragpath)
         glGetProgramInfoLog(ID, 512, NULL, infoLog);
         std::cout << "Shader program linking failed:\n" << infoLog << std::endl;
     }
-    glUseProgram(ID);
     glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);  
+    glDeleteShader(fragmentShader);
 }
 
 const char* Shader::readShader(const char* shaderPath)

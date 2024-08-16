@@ -16,7 +16,8 @@ class Shader
 {
 public:
     unsigned int ID;
-    void initshader(const char* vertpath, const char* fragpath);
+    Shader() = default;
+    Shader(const char* vertpath, const char* fragpath);
     void use();
     void setBool(const std::string &name, bool value) const;
     void setInt(const std::string &name, int value) const;

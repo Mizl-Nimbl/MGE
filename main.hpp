@@ -19,6 +19,7 @@ public:
         glDeleteVertexArrays(1, &s.VAO);
         glDeleteBuffers(1, &s.VBO);
         glDeleteBuffers(1, &s.EBO);
+        glDeleteFramebuffers(1, &s.FBO);
         glfwTerminate();
         running = false;
     }

@@ -46,16 +46,13 @@ bool Systems::initialize()
     glBindVertexArray(lightVAO);
     glGenBuffers(1, &EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    /*
     glGenFramebuffers(1, &FBO);
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
     {
-        
+        std::cout << "Framebuffer Generated Successfully." << std::endl;
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDeleteFramebuffers(1, &FBO);
-    */
     //draw mode
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_DEPTH_TEST);
@@ -66,7 +63,7 @@ bool Systems::initialize()
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_FRAMEBUFFER_SRGB);
     //use shaders
-    g.initshader("/home/mizl/Documents/MGE/assets/shaders/main.vert", "/home/mizl/Documents/MGE/assets/shaders/main.frag");
+    //g.initshader("/home/mizl/Documents/MGE/assets/shaders/main.vert", "/home/mizl/Documents/MGE/assets/shaders/main.frag");
     //load models
     Model backpack("/home/mizl/Documents/MGE/assets/models/backpack/backpack.obj");
     Model test("/home/mizl/Documents/MGE/assets/models/test/test.obj");
