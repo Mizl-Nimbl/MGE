@@ -39,7 +39,12 @@ public:
     float pitch = 0.0f;
 private:
     Shader* mainshader;
-    Shader* framebuffer;
+    Shader* noshader;
+    Shader* blurshader;
+    Shader* invertshader; 
+    Shader* greyshader;
+    Shader* edgeshader; 
+    Shader* sharpenshader;
 };
 
 #endif /* render_hpp */

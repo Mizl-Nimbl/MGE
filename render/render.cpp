@@ -5,13 +5,18 @@ Render::Render(){}
 Render::~Render()
 {
     delete mainshader;
-    delete framebuffer;
+    delete noshader;
 }
 
 void Render::initializeshaders()
 {
     mainshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/main.vert", "/home/mizl/Documents/MGE/assets/shaders/main.frag");
-    framebuffer = new Shader("/home/mizl/Documents/MGE/assets/shaders/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/fb.frag");
+    noshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/none.frag");
+    blurshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/blur.frag");
+    invertshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/invert.frag");
+    greyshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/greyscale.frag");
+    edgeshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/edgedetection.frag");
+    sharpenshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/sharpen.frag");
 }
 
 void Render::render(GLFWwindow* window)
@@ -89,7 +94,12 @@ void Render::render(GLFWwindow* window)
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
     glClear(GL_COLOR_BUFFER_BIT);
 
-    framebuffer->use();
+    noshader->use();
+    //blurshader->use();
+    //invertshader->use();
+    //greyshader->use();
+    //edgeshader->use();
+    //sharpenshader->use();
     glBindVertexArray(s.frameVAO);
     glDisable(GL_DEPTH_TEST);
     glBindTexture(GL_TEXTURE_2D, s.framebuffertex);
