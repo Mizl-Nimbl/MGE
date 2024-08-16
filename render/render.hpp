@@ -39,6 +39,7 @@ public:
     float pitch = 0.0f;
 private:
     Shader* mainshader;
+    Shader* framebuffer;
 };
 
 #endif /* render_hpp */
