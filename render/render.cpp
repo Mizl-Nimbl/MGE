@@ -11,7 +11,7 @@ Render::~Render()
 void Render::initializeshaders()
 {
     mainshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/main.vert", "/home/mizl/Documents/MGE/assets/shaders/main.frag");
-    framebuffer = new Shader("/home/mizl/Documents/MGE/assets/shaders/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/fb.frag")
+    framebuffer = new Shader("/home/mizl/Documents/MGE/assets/shaders/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/fb.frag");
 }
 
 void Render::render(GLFWwindow* window)
