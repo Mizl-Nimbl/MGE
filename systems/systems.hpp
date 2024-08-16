@@ -25,8 +25,11 @@ public:
     unsigned int VBO;
     unsigned int VAO;
     unsigned int lightVAO;
+    unsigned int frameVAO;
+    unsigned int frameVBO;
     unsigned int EBO;
     unsigned int FBO;
+    unsigned int RBO;
     GLFWwindow* window;
     int windoww = 1280;
     int windowh = 720;
@@ -36,6 +39,7 @@ public:
     float yoffset;
     bool firstMouse;
     std::vector <Model> models;
+    unsigned int framebuffertex;
     unsigned int initFramebuffer();
 private:
 };

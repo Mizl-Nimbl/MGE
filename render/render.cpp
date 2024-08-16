@@ -16,6 +16,12 @@ void Render::initializeshaders()
 
 void Render::render(GLFWwindow* window)
 {
+    mainshader->use();
+    glBindFramebuffer(GL_FRAMEBUFFER, s.FBO);
+    glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // we're not using the stencil buffer now
+    glEnable(GL_DEPTH_TEST);
+
     mainshader->setMat4("proj", proj);
     int once = 0;
     if (once = 0)
@@ -47,11 +53,8 @@ void Render::render(GLFWwindow* window)
     cameraFront = glm::normalize(cameraDirection);
 
     //clear screen
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //use shaders
-    mainshader->use();
     mainshader->setInt("material.Textureimg", 0);
     mainshader->setInt("material.specular", 1);
 
@@ -81,6 +84,17 @@ void Render::render(GLFWwindow* window)
         mainshader->setMat4("model", model);
         n.DrawModel(s.models.at(i));
     }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    framebuffer->use();
+    glBindVertexArray(s.frameVAO);
+    glDisable(GL_DEPTH_TEST);
+    glBindTexture(GL_TEXTURE_2D, s.framebuffertex);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
     //draw
     glfwSwapBuffers(window);
     glfwPollEvents();
