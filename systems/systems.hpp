@@ -6,7 +6,6 @@
 #include <GLFW/glfw3.h>
 
 /* NEVER ADD "#include ../render/render.hpp" here. biggest waste of 1 hour ever. */
-#include "../textures/textures.hpp"
 #include "../model/model.hpp"
 #include "../shaders/shader.hpp"
 #include "../declarations.hpp"
@@ -37,6 +36,7 @@ public:
     float yoffset;
     bool firstMouse;
     std::vector <Model> models;
+    unsigned int initFramebuffer();
 private:
 };
 

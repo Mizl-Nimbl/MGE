@@ -49,7 +49,7 @@ bool Systems::initialize()
     //framebuffer calls
     glGenFramebuffers(1, &FBO);
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
-    unsigned int framebuffertex = t.initFramebuffer();
+    unsigned int framebuffertex = initFramebuffer();
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, framebuffertex, 0);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE)
     {
@@ -99,4 +99,17 @@ void Systems::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     
     s.xoffset *= s.sensitivity;
     s.yoffset *= s.sensitivity;
+}
+
+unsigned int Systems::initFramebuffer()
+{
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 600, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); 
+    return texture;
 }
