@@ -18,6 +18,7 @@ class Textures
 {
 public:
     unsigned int initTexture(const char* texturepath);
+    unsigned int initFramebuffer();
 private:
     std::unordered_map<std::string, unsigned int> textureCache;
 };
