@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <math.h>
+#include <vector>
 
 #include "../systems/systems.hpp"
 #include "../shaders/shader.hpp"
@@ -19,6 +20,7 @@ public:
     Render();
     ~Render();
     void initializeshaders();
+    void initializeskybox();
     void render(GLFWwindow* window);
     void setDirectionalLight(Shader g, int i, int re, int gr, int bl, int al, glm::vec3 direction, glm::vec3 specular);
     void setPointLight(Shader g, int i, int re, int gr, int bl, int al, glm::vec3 position, float constant, float linear, float quadratic);
@@ -36,16 +38,16 @@ public:
     glm::vec3 cameraFront;
 
     //use skybox
-    vector<std::string> faces;
+    std::vector<std::string> faces = 
     {
-        "/home/mizl/Documents/MGE/assets/include/skybox/right.jpg",
-        "/home/mizl/Documents/MGE/assets/include/skybox/left.jpg",
-        "/home/mizl/Documents/MGE/assets/include/skybox/top.jpg",
-        "/home/mizl/Documents/MGE/assets/include/skybox/bottom.jpg",
-        "/home/mizl/Documents/MGE/assets/include/skybox/front.jpg",
-        "/home/mizl/Documents/MGE/assets/include/skybox/back.jpg"
-    }
-    unsigned int skyboxtex = t.initCubemap(faces);
+        "/home/mizl/Documents/MGE/assets/images/skybox2/right.jpg",
+        "/home/mizl/Documents/MGE/assets/images/skybox2/left.jpg",
+        "/home/mizl/Documents/MGE/assets/images/skybox2/top.jpg",
+        "/home/mizl/Documents/MGE/assets/images/skybox2/bottom.jpg",
+        "/home/mizl/Documents/MGE/assets/images/skybox2/front.jpg",
+        "/home/mizl/Documents/MGE/assets/images/skybox2/back.jpg"
+    };
+    unsigned int skyboxtex;
 
     float yaw = -90.0f;
     float pitch = 0.0f;

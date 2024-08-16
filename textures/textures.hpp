@@ -9,6 +9,7 @@
 #include "../declarations.hpp"
 
 #include <unordered_map>
+#include <vector>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -18,7 +19,7 @@ class Textures
 {
 public:
     unsigned int initTexture(const char* texturepath);
-    unsigned int initCubemap(vector<std::string> faces);
+    unsigned int initCubemap(std::vector<std::string> faces);
 private:
     std::unordered_map<std::string, unsigned int> textureCache;
 };

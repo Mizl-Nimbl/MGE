@@ -10,7 +10,7 @@ Render::~Render()
 
 void Render::initializeshaders()
 {
-    skyboxshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/skybox.vert", "/home/mizl/Documents/MGE/assets/shaders/skybox.frag")
+    skyboxshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/skybox.vert", "/home/mizl/Documents/MGE/assets/shaders/skybox.frag");
     mainshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/main.vert", "/home/mizl/Documents/MGE/assets/shaders/main.frag");
     noshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/none.frag");
     blurshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/blur.frag");
@@ -20,25 +20,18 @@ void Render::initializeshaders()
     sharpenshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/sharpen.frag");
 }
 
+void Render::initializeskybox()
+{
+    skyboxtex = t.initCubemap(faces);
+}
+
 void Render::render(GLFWwindow* window)
 {
-    view = glm::mat4(glm::mat3(glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp)));
-    glDepthMask(GL_FALSE);
-    skyboxshader.use();
-    skyboxshader->setMat4("proj", proj);
-    skyboxshader->setMat4("view", view);
-    glBindVertexArray(skyboxVAO);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, s.skyboxtex);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-    glDepthMask(GL_TRUE);
-
-    mainshader->use();
     glBindFramebuffer(GL_FRAMEBUFFER, s.FBO);
     glClearColor(0.01f, 0.01f, 0.01f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // we're not using the stencil buffer now
     glEnable(GL_DEPTH_TEST);
-
-    mainshader->setMat4("proj", proj);
+    
     int once = 0;
     if (once = 0)
     {
@@ -68,9 +61,24 @@ void Render::render(GLFWwindow* window)
     cameraUp = glm::cross(cameraDirection, cameraRight);
     cameraFront = glm::normalize(cameraDirection);
 
-    //clear screen
+    view = glm::mat4(glm::mat3(glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp)));
+    glDepthFunc(GL_LEQUAL);
+    glDepthMask(GL_FALSE);
+    skyboxshader->use();
+    skyboxshader->setInt("skybox", 0);
+    skyboxshader->setMat4("proj", proj);
+    skyboxshader->setMat4("view", view);
+    glBindVertexArray(s.skyboxVAO);
+    glActiveTexture(0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxtex);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glBindVertexArray(0);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LESS);
 
     //use shaders
+    mainshader->use();
+    mainshader->setMat4("proj", proj);
     mainshader->setInt("material.Textureimg", 0);
     mainshader->setInt("material.specular", 1);
 

@@ -52,9 +52,10 @@ unsigned int Textures::initTexture(const char* texturepath)
     return texture;
 }
 
-unsigned int initCubemap(vector<std::string> faces)
+unsigned int Textures::initCubemap(std::vector<std::string> faces)
 {
     unsigned int textureID;
+    stbi_set_flip_vertically_on_load(true);
     glGenTextures(1, &textureID);
     glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
 
