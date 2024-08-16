@@ -27,6 +27,8 @@ public:
     unsigned int lightVAO;
     unsigned int frameVAO;
     unsigned int frameVBO;
+    unsigned int skyboxVAO;
+    unsigned int skyboxVBO;
     unsigned int EBO;
     unsigned int FBO;
     unsigned int RBO;

@@ -10,6 +10,7 @@ Render::~Render()
 
 void Render::initializeshaders()
 {
+    skyboxshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/skybox.vert", "/home/mizl/Documents/MGE/assets/shaders/skybox.frag")
     mainshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/main.vert", "/home/mizl/Documents/MGE/assets/shaders/main.frag");
     noshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/none.frag");
     blurshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/blur.frag");
@@ -21,6 +22,16 @@ void Render::initializeshaders()
 
 void Render::render(GLFWwindow* window)
 {
+    view = glm::mat4(glm::mat3(glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp)));
+    glDepthMask(GL_FALSE);
+    skyboxshader.use();
+    skyboxshader->setMat4("proj", proj);
+    skyboxshader->setMat4("view", view);
+    glBindVertexArray(skyboxVAO);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, s.skyboxtex);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    glDepthMask(GL_TRUE);
+
     mainshader->use();
     glBindFramebuffer(GL_FRAMEBUFFER, s.FBO);
     glClearColor(0.01f, 0.01f, 0.01f, 1.0f);

@@ -35,9 +35,22 @@ public:
     glm::vec3 cameraUp;
     glm::vec3 cameraFront;
 
+    //use skybox
+    vector<std::string> faces;
+    {
+        "/home/mizl/Documents/MGE/assets/include/skybox/right.jpg",
+        "/home/mizl/Documents/MGE/assets/include/skybox/left.jpg",
+        "/home/mizl/Documents/MGE/assets/include/skybox/top.jpg",
+        "/home/mizl/Documents/MGE/assets/include/skybox/bottom.jpg",
+        "/home/mizl/Documents/MGE/assets/include/skybox/front.jpg",
+        "/home/mizl/Documents/MGE/assets/include/skybox/back.jpg"
+    }
+    unsigned int skyboxtex = t.initCubemap(faces);
+
     float yaw = -90.0f;
     float pitch = 0.0f;
 private:
+    Shader* skyboxshader;
     Shader* mainshader;
     Shader* noshader;
     Shader* blurshader;
