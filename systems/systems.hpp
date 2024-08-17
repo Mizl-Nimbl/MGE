@@ -31,10 +31,13 @@ public:
     unsigned int skyboxVBO;
     unsigned int EBO;
     unsigned int FBO;
+    unsigned int depthmapFBO;
     unsigned int RBO;
     GLFWwindow* window;
     int windoww = 1280;
     int windowh = 720;
+    int SHADOW_WIDTH = 1024;
+    int SHADOW_HEIGHT = 1024;
     float lastX = windoww/2, lastY = windowh/2;
     float sensitivity = 0.4f;
     float xoffset;

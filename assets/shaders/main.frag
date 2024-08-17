@@ -4,6 +4,7 @@ out vec4 FragColor;
 struct Material {
     sampler2D diffuse[16];
     sampler2D specular[16];
+    sampler2D normal[16];
     float shininess;
 }; 
 
@@ -23,20 +24,19 @@ struct Light {
 };
 
 in vec3 FragPos;
-in vec3 Normal;
 in vec2 Texture;
+in mat3 TBN;
+in vec4 FragPosLightSpace;
 
 #define lightCount 16
 uniform vec3 viewPos;
 uniform Material material;
 uniform Light light[lightCount];
+uniform sampler2D shadowMap;
 
 void main()
 {
     vec4 result = vec4(0.0);
-    vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 norm = normalize(Normal);
-
     for(int i = 0; i < lightCount; i++)
     {
         float theta;
@@ -46,6 +46,31 @@ void main()
         float attenuation = 1.0;
         vec3 lightDir;
         vec3 halfwayDir;
+        vec3 viewDir;
+        vec3 norm;
+        float diff;
+        float spec;
+        float shadow;
+
+        for (int j = 0; j < 16; j++) 
+        {
+            viewDir = normalize(viewPos - FragPos);
+            norm = texture(material.normal[j], Texture).rgb;
+            //norm = normalize(norm * 2.0 - 1.0); // Transform from [0,1] to [-1,1]
+            norm = normalize(TBN * norm); // Transform to world space
+
+            //vec3 templightDir = normalize(-light[i].direction);
+            //float bias = max(0.05 * (1.0 - dot(norm, templightDir)), 0.005);  
+            //vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
+            //projCoords = projCoords * 0.5 + 0.5; // Transform to [0,1] range
+            //float closestDepth = texture(shadowMap, projCoords.xy).r;
+            //float currentDepth = projCoords.z;
+            //shadow = (currentDepth - bias > closestDepth) ? 1.0 : 0.0;
+            //if (projCoords.x > 1.0 || projCoords.y > 1.0 || projCoords.z > 1.0 || projCoords.x < 0.0 || projCoords.y < 0.0 || projCoords.z < 0.0)
+            //{
+            //    shadow = 0.0;
+            //}
+        }
 
         // attenuation calculations
         if (light[i].type == 1 || light[i].type == 2)
@@ -71,10 +96,12 @@ void main()
         {
             lightDir = normalize(light[i].position - FragPos);
         }
-        halfwayDir = normalize(lightDir + viewDir);
-        float diff = max(dot(norm, lightDir), 0.0);
-        vec3 reflectDir = reflect(-lightDir, norm);
-        float spec = pow(max(dot(viewDir, halfwayDir), 0.0), (material.shininess) * 3.0);
+        for (int j = 0; j < 16; j++) {
+            halfwayDir = normalize(lightDir + viewDir);
+            diff = max(dot(norm, lightDir), 0.0);
+            //vec3 reflectDir = reflect(-lightDir, norm);
+            spec = pow(max(dot(viewDir, halfwayDir), 0.0), (material.shininess) * 3.0);
+        }
 
         vec4 diffuse = vec4(0.0);
         vec4 specular = vec4(0.0);

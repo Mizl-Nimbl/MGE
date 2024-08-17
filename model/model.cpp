@@ -9,6 +9,25 @@ void Model::Draw()
     }
 } 
 
+void Model::setLocation(glm::vec3 newLocation) {
+    location = newLocation;
+}
+
+// Setter method for rotation
+void Model::setRotation(glm::vec3 newRotation) {
+    rotation = newRotation;
+}
+
+glm::vec3 Model::getLocation()
+{
+    return location;
+}
+
+glm::vec3 Model::getRotation()
+{
+    return rotation;
+}
+
 void Model::loadModel(std::string const &path)
 {
     meshes.clear();
@@ -75,6 +94,50 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
         vertices.push_back(vertex);
     }
 
+    for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
+        aiFace face = mesh->mFaces[i];
+        unsigned int idx0 = face.mIndices[0];
+        unsigned int idx1 = face.mIndices[1];
+        unsigned int idx2 = face.mIndices[2];
+
+        Vertex& v0 = vertices[idx0];
+        Vertex& v1 = vertices[idx1];
+        Vertex& v2 = vertices[idx2];
+
+        glm::vec3 edge1 = v1.position - v0.position;
+        glm::vec3 edge2 = v2.position - v0.position;
+        glm::vec2 deltaUV1 = v1.texCoords - v0.texCoords;
+        glm::vec2 deltaUV2 = v2.texCoords - v0.texCoords;
+
+        float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+
+        glm::vec3 tangent, bitangent;
+
+        tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+        tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+        tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+        tangent = glm::normalize(tangent);
+
+        bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+        bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+        bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+        bitangent = glm::normalize(bitangent);
+
+        v0.tangent += tangent;
+        v1.tangent += tangent;
+        v2.tangent += tangent;
+
+        v0.bitangent += bitangent;
+        v1.bitangent += bitangent;
+        v2.bitangent += bitangent;
+    }
+
+    // Normalize tangents and bitangents
+    for (unsigned int i = 0; i < vertices.size(); i++) {
+        vertices[i].tangent = glm::normalize(vertices[i].tangent);
+        vertices[i].bitangent = glm::normalize(vertices[i].bitangent);
+    }
+
     for(unsigned int i = 0; i < mesh->mNumFaces; i++)
     {
         aiFace face = mesh->mFaces[i];
@@ -91,7 +154,9 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
         std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-        //std::cout << "Loaded " << diffuseMaps.size() << " diffuse textures and " << specularMaps.size() << " specular textures for mesh." << std::endl;
+        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+        textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
+        std::cout << "Loaded " << diffuseMaps.size() << " diffuse textures and " << specularMaps.size() << " specular textures and " << normalMaps.size() << " normal maps for mesh." << std::endl;
     }
 
     return Mesh(vertices, indices, textures);

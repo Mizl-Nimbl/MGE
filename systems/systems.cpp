@@ -61,6 +61,25 @@ bool Systems::initialize()
     {
         std::cout << "Framebuffer Generated Successfully." << std::endl;
     }
+    //depth framebuffer
+    glGenFramebuffers(1, &depthmapFBO);
+    SHADOW_WIDTH = 1024;
+    SHADOW_HEIGHT = 1024;
+    unsigned int depthMap;
+    glGenTextures(1, &depthMap);
+    glBindTexture(GL_TEXTURE_2D, depthMap);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+    glBindFramebuffer(GL_FRAMEBUFFER, depthmapFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    //rebing original buffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     //frameVAO
     float quadVertices[] = {
@@ -145,8 +164,11 @@ bool Systems::initialize()
     glEnable(GL_FRAMEBUFFER_SRGB);
     //load models
     Model backpack("/home/mizl/Documents/MGE/assets/models/backpack/backpack.obj");
+    backpack.setLocation(glm::vec3(0.0f, 3.0f, 0.0f));
     Model test("/home/mizl/Documents/MGE/assets/models/test/test.obj");
+    test.setLocation(glm::vec3(0.0f, 0.0f, 0.0f));
     Model window("/home/mizl/Documents/MGE/assets/models/window/window.obj");
+    window.setLocation(glm::vec3(0.0f, -3.0f, 0.0f));
     models.push_back(backpack);
     models.push_back(test);
     models.push_back(window);
@@ -183,7 +205,7 @@ unsigned int Systems::initFramebuffer()
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1280, 720, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1280, 720, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); 
