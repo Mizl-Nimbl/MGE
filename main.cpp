@@ -18,6 +18,7 @@ int main()
         r.initializeshaders();
         r.initializeskybox();
         r.initializelights();
+        r.initializeSSAO();
         m.running = true;
         //this code needs to be HERE and NOT in s.initialize
         std::string vertexshadersource = g.readShader("/home/mizl/Documents/MGE/assets/shaders/main.vert");

@@ -23,9 +23,19 @@ public:
     void initializeshaders();
     void initializeskybox();
     void initializelights();
+    void initializeSSAO();
     void renderScene(Shader* shader);
     void render(GLFWwindow* window);
     void renderShadowMap();
+    void renderSSAO();
+    std::vector<glm::vec3> ssaoKernel;
+    std::vector<glm::vec3> ssaoNoise;
+    unsigned int ssaoFBO, ssaoBlurFBO;
+    unsigned int ssaoColorBuffer;
+    unsigned int ssaoColorBufferBlur;
+    unsigned int noiseTexture;
+    unsigned int gPosition;
+    unsigned int gNormal;
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 proj = glm::perspective(glm::radians(90.0f), (float)s.windoww / (float)s.windowh, 0.1f, 100.0f);
@@ -65,6 +75,8 @@ private:
     Shader* greyshader;
     Shader* edgeshader; 
     Shader* sharpenshader;
+    Shader* ssaoshader;
+    Shader* ssaoblurshader;
 };
 
 #endif /* render_hpp */

@@ -17,8 +17,8 @@ Render::~Render()
 
 void Render::initializelights()
 {
-    Light bluelight(79, 50, 240, 80, glm::vec3(2.0f, 3.0f, 1.0f), 1.0f);
-    Light redlight(245, 47, 47, 80, glm::vec3(-2.0f, -3.0f, 1.0f), 1.0f);
+    Light bluelight(79, 50, 240, 150, glm::vec3(2.0f, 3.0f, 1.0f), 1.0f);
+    Light redlight(245, 47, 47, 150, glm::vec3(-2.0f, -3.0f, 1.0f), 1.0f);
     Light flashlight(171, 188, 224, 100, cameraPos, cameraFront, 1.0f);
     lights.push_back(flashlight);
     lights.push_back(bluelight);
@@ -36,11 +36,77 @@ void Render::initializeshaders()
     greyshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/greyscale.frag");
     edgeshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/edgedetection.frag");
     sharpenshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/sharpen.frag");
+    ssaoshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/ssao/ssao.vert", "/home/mizl/Documents/MGE/assets/shaders/ssao/ssao.frag");
+    ssaoblurshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/ssao/ssao.vert", "/home/mizl/Documents/MGE/assets/shaders/ssao/blurssao.frag");
 }
 
 void Render::initializeskybox()
 {
     skyboxtex = t.initCubemap(faces);
+}
+
+void Render::initializeSSAO()
+{
+    glGenFramebuffers(1, &ssaoFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+    glGenTextures(1, &ssaoColorBuffer);
+    glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, s.windoww, s.windowh, 0, GL_RGB, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBuffer, 0);
+
+    glGenFramebuffers(1, &ssaoBlurFBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
+    glGenTextures(1, &ssaoColorBufferBlur);
+    glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, s.windoww, s.windowh, 0, GL_RGB, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, ssaoColorBufferBlur, 0);
+
+    for (unsigned int i = 0; i < 64; ++i)
+    {
+        glm::vec3 sample(
+            (rand() / (float)RAND_MAX) * 2.0 - 1.0,
+            (rand() / (float)RAND_MAX) * 2.0 - 1.0,
+            rand() / (float)RAND_MAX);
+        sample = glm::normalize(sample);
+        sample *= rand() / (float)RAND_MAX;
+        float scale = float(i) / 64.0;
+        scale = glm::mix(0.1f, 1.0f, scale * scale);
+        sample *= scale;
+        ssaoKernel.push_back(sample);
+    }
+    for (unsigned int i = 0; i < 16; i++)
+    {
+        glm::vec3 noise(
+            (rand() / (float)RAND_MAX) * 2.0 - 1.0,
+            (rand() / (float)RAND_MAX) * 2.0 - 1.0,
+            0.0f);
+        ssaoNoise.push_back(noise);
+    }
+    glGenTextures(1, &gPosition);
+    glBindTexture(GL_TEXTURE_2D, gPosition);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, s.windoww, s.windowh, 0, GL_RGB, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glGenTextures(1, &gNormal);
+    glBindTexture(GL_TEXTURE_2D, gNormal);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, s.windoww, s.windowh, 0, GL_RGB, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glGenTextures(1, &noiseTexture);
+    glBindTexture(GL_TEXTURE_2D, noiseTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+
 }
 
 void Render::renderScene(Shader* shader)
@@ -78,6 +144,35 @@ void Render::renderShadowMap()
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glCullFace(GL_BACK);
+}
+
+void Render::renderSSAO()
+{
+    // 1. Generate SSAO texture
+    glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ssaoshader->use();
+    for (unsigned int i = 0; i < 64; ++i)
+    {
+        ssaoshader->setVec3("samples[" + std::to_string(i) + "]", ssaoKernel[i]);
+    }
+    ssaoshader->setMat4("projection", proj);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, gPosition);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, gNormal);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, noiseTexture);
+    renderScene(ssaoshader);
+
+    // 2. Blur SSAO texture
+    glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ssaoblurshader->use();
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
+    renderScene(ssaoblurshader);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Render::render(GLFWwindow* window)
@@ -177,6 +272,10 @@ void Render::render(GLFWwindow* window)
     //lights ending here
 
     renderScene(mainshader);
+    //ssao pass
+
+    renderSSAO();
+
     //second pass
     glBindFramebuffer(GL_FRAMEBUFFER, 0); // back to default
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f); 
@@ -190,7 +289,12 @@ void Render::render(GLFWwindow* window)
     //sharpenshader->use();
     glBindVertexArray(s.frameVAO);
     glDisable(GL_DEPTH_TEST);
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, s.framebuffertex);
+    hdrshader->setInt("scene", 0);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
+    hdrshader->setInt("ssao", 1);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     //draw
