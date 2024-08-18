@@ -17,10 +17,12 @@ Render::~Render()
 
 void Render::initializelights()
 {
-    Light pointlight(245, 86, 12, 100, glm::vec3(2.0f, 3.0f, 0.0f), 1.0f);
+    Light bluelight(79, 50, 240, 20, glm::vec3(2.0f, 3.0f, 1.0f), 1.0f);
+    Light redlight(245, 47, 47, 15, glm::vec3(-2.0f, -3.0f, 1.0f), 1.0f);
     Light flashlight(171, 188, 224, 69, cameraPos, cameraFront, 1.0f);
-    lights.push_back(pointlight);
     lights.push_back(flashlight);
+    lights.push_back(bluelight);
+    lights.push_back(redlight);
 }
 
 void Render::initializeshaders()
@@ -155,15 +157,15 @@ void Render::render(GLFWwindow* window)
     mainshader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
     //setPointLight(mainshader, 1, 245, 86, 12, 100, glm::vec3(2.0f, 3.0f, 0.0f), 1.0f, 0.09f, 0.032f);
     //setSpotLight(mainshader, 0, 171, 188, 224, 69, cameraPos, cameraFront, glm::cos(glm::radians(17.5f)), glm::cos(glm::radians(25.0f)), 1.0f, 0.09f, 0.032f);
-    lights[1].setPosition(cameraPos);
-    lights[1].setDirection(cameraFront);
+    lights[0].setPosition(cameraPos);
+    lights[0].setDirection(cameraFront);
     for (int i = 0; i < lights.size(); i++) 
     {
         std::string index = std::to_string(i);
         mainshader->setInt("light[" + index + "].type", lights[i].getType());
         mainshader->setVec3("light[" + index + "].position", lights[i].getPosition());
         mainshader->setVec3("light[" + index + "].direction", lights[i].getDirection());
-        mainshader->setVec3("light[" + index + "].ambient", glm::vec3(lights[i].getRed() * 0.009f , lights[i].getGreen() * 0.009f, lights[i].getBlue() * 0.009f));
+        mainshader->setVec3("light[" + index + "].ambient", glm::vec3(lights[i].getRed() * 0.0001f , lights[i].getGreen() * 0.0001f, lights[i].getBlue() * 0.0001f));
         mainshader->setVec3("light[" + index + "].diffuse", glm::vec3(lights[i].getRed(), lights[i].getGreen(), lights[i].getBlue()));
         mainshader->setVec3("light[" + index + "].specular", glm::vec3(lights[i].getRed(), lights[i].getGreen(), lights[i].getBlue()));
         mainshader->setFloat("light[" + index + "].cutOff", lights[i].getCutOff());

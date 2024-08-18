@@ -19,9 +19,9 @@ Light::Light(int re, int gr, int bl, int al, glm::vec3 aposition, float attentua
     green  = (gr / 255.0f) * bright;
     blue   = (bl / 255.0f) * bright;
     position = aposition;
-    constant = 1.0f * attentuation;
-    linear = 0.09f * attentuation;
-    quadratic = 0.032f * attentuation;
+    constant = 1.0f * (attentuation * bright);
+    linear = 0.09f * (attentuation * bright);
+    quadratic = 0.032f * (attentuation * bright);
 }
 
 Light::Light(int re, int gr, int bl, int al, glm::vec3 aposition, glm::vec3 adirection, float attenuation)
@@ -33,9 +33,9 @@ Light::Light(int re, int gr, int bl, int al, glm::vec3 aposition, glm::vec3 adir
     blue   = (bl / 255.0f) * bright;
     position = aposition;
     direction = adirection;
-    constant = 1.0f * attenuation;
-    linear = 0.09f * attenuation;
-    quadratic = 0.032f * attenuation;
+    constant = 1.0f * (attenuation * bright);
+    linear = 0.09f * (attenuation * bright);
+    quadratic = 0.032f * (attenuation * bright);
     cutOff = glm::cos(glm::radians(12.5f));
     outerCutOff = glm::cos(glm::radians(17.5f));
 }
