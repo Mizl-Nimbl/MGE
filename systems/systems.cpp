@@ -163,14 +163,17 @@ bool Systems::initialize()
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_FRAMEBUFFER_SRGB);
     //load models
-    Model backpack("/home/mizl/Documents/MGE/assets/models/backpack/backpack.obj");
-    backpack.setLocation(glm::vec3(0.0f, 3.0f, 0.0f));
+    //Model backpack("/home/mizl/Documents/MGE/assets/models/backpack/backpack.obj");
+    //backpack.setLocation(glm::vec3(0.0f, 3.0f, 0.0f));
     Model test("/home/mizl/Documents/MGE/assets/models/test/test.obj");
     test.setLocation(glm::vec3(0.0f, 0.0f, 0.0f));
     Model window("/home/mizl/Documents/MGE/assets/models/window/window.obj");
-    window.setLocation(glm::vec3(0.0f, -3.0f, 0.0f));
-    models.push_back(backpack);
+    window.setLocation(glm::vec3(0.0f, 3.0f, 0.0f));
+    Model skull("/home/mizl/Documents/MGE/assets/models/skull/skull.obj");
+    skull.setLocation(glm::vec3(3.0f, 0.0f, 0.0f));
+    //models.push_back(backpack);
     models.push_back(test);
+    models.push_back(skull);
     models.push_back(window);
     return true;
 }

@@ -7,7 +7,7 @@ uniform sampler2D screenTexture;
 
 void main()
 {   
-    const float gamma = 1.3;
+    const float gamma = 1.0;
     vec3 hdrColour = texture(screenTexture, TexCoords).rgb;
     vec3 mapped = hdrColour / (hdrColour + vec3(1.0));
     mapped = pow(mapped, vec3(1.0 / gamma));

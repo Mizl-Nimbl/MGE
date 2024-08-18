@@ -58,32 +58,6 @@ void main()
             norm = texture(material.normal[j], Texture).rgb;
             //norm = normalize(norm * 2.0 - 1.0); // Transform from [0,1] to [-1,1]
             norm = normalize(TBN * norm); // Transform to world space
-
-            //vec3 templightDir = normalize(-light[i].direction);
-            //float bias = max(0.05 * (1.0 - dot(norm, templightDir)), 0.005);  
-            //vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
-            //projCoords = projCoords * 0.5 + 0.5; // Transform to [0,1] range
-            //float closestDepth = texture(shadowMap, projCoords.xy).r;
-            //float currentDepth = projCoords.z;
-            //shadow = (currentDepth - bias > closestDepth) ? 1.0 : 0.0;
-            //if (projCoords.x > 1.0 || projCoords.y > 1.0 || projCoords.z > 1.0 || projCoords.x < 0.0 || projCoords.y < 0.0 || projCoords.z < 0.0)
-            //{
-            //    shadow = 0.0;
-            //}
-        }
-
-        // attenuation calculations
-        if (light[i].type == 1 || light[i].type == 2)
-        {
-            distance = length(light[i].position - FragPos);
-            attenuation = 1.0 / (light[i].constant + light[i].linear * distance + light[i].quadratic * (distance * distance));
-        }
-
-        // ambient
-        vec4 ambient = vec4(0.0);
-        for (int j = 0; j < 16; j++) {
-            vec4 texColor = texture(material.diffuse[j], Texture).rgba;
-            ambient += vec4(light[i].ambient, 1.0) * texColor;
         }
 
         // diffuse
@@ -95,13 +69,23 @@ void main()
         else
         {
             lightDir = normalize(light[i].position - FragPos);
+            distance = length(light[i].position - FragPos);
+            attenuation = 1.0 / (light[i].constant + light[i].linear * distance + light[i].quadratic * (distance * distance));
         }
+
+        // ambient
+        vec4 ambient = vec4(0.0);
         for (int j = 0; j < 16; j++) {
-            halfwayDir = normalize(lightDir + viewDir);
-            diff = max(dot(norm, lightDir), 0.0);
-            //vec3 reflectDir = reflect(-lightDir, norm);
-            spec = pow(max(dot(viewDir, halfwayDir), 0.0), (material.shininess) * 3.0);
+            vec4 texColor = texture(material.diffuse[j], Texture).rgba;
+            ambient += vec4(light[i].ambient, 1.0) * texColor;
         }
+
+        
+        halfwayDir = normalize(lightDir + viewDir);
+        vec3 reflectDir = reflect(-lightDir, norm);
+        diff = max(dot(norm, lightDir), 0.0);
+        vec3 blendedDir = normalize(mix(reflectDir, halfwayDir, 0.5));
+        spec = pow(max(dot(viewDir, blendedDir), 0.0), (material.shininess) * 3.0);
 
         vec4 diffuse = vec4(0.0);
         vec4 specular = vec4(0.0);

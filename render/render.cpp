@@ -17,9 +17,9 @@ Render::~Render()
 
 void Render::initializelights()
 {
-    Light bluelight(79, 50, 240, 20, glm::vec3(2.0f, 3.0f, 1.0f), 1.0f);
-    Light redlight(245, 47, 47, 15, glm::vec3(-2.0f, -3.0f, 1.0f), 1.0f);
-    Light flashlight(171, 188, 224, 69, cameraPos, cameraFront, 1.0f);
+    Light bluelight(79, 50, 240, 80, glm::vec3(2.0f, 3.0f, 1.0f), 1.0f);
+    Light redlight(245, 47, 47, 80, glm::vec3(-2.0f, -3.0f, 1.0f), 1.0f);
+    Light flashlight(171, 188, 224, 100, cameraPos, cameraFront, 1.0f);
     lights.push_back(flashlight);
     lights.push_back(bluelight);
     lights.push_back(redlight);
@@ -165,7 +165,7 @@ void Render::render(GLFWwindow* window)
         mainshader->setInt("light[" + index + "].type", lights[i].getType());
         mainshader->setVec3("light[" + index + "].position", lights[i].getPosition());
         mainshader->setVec3("light[" + index + "].direction", lights[i].getDirection());
-        mainshader->setVec3("light[" + index + "].ambient", glm::vec3(lights[i].getRed() * 0.0001f , lights[i].getGreen() * 0.0001f, lights[i].getBlue() * 0.0001f));
+        mainshader->setVec3("light[" + index + "].ambient", glm::vec3(lights[i].getRed() * 0.025f , lights[i].getGreen() * 0.025f, lights[i].getBlue() * 0.025f));
         mainshader->setVec3("light[" + index + "].diffuse", glm::vec3(lights[i].getRed(), lights[i].getGreen(), lights[i].getBlue()));
         mainshader->setVec3("light[" + index + "].specular", glm::vec3(lights[i].getRed(), lights[i].getGreen(), lights[i].getBlue()));
         mainshader->setFloat("light[" + index + "].cutOff", lights[i].getCutOff());
