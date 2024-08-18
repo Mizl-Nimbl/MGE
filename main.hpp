@@ -8,6 +8,7 @@
 #include "textures/textures.cpp"
 #include "mesh/mesh.cpp"
 #include "model/model.cpp"
+#include "light/light.cpp"
 #include "declarations.hpp"
 
 class Main 

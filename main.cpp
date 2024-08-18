@@ -9,6 +9,7 @@ Shader g;
 Textures t;
 Mesh h;
 Model n;
+Light l;
 
 int main() 
 {
@@ -16,6 +17,7 @@ int main()
     {
         r.initializeshaders();
         r.initializeskybox();
+        r.initializelights();
         m.running = true;
         //this code needs to be HERE and NOT in s.initialize
         std::string vertexshadersource = g.readShader("/home/mizl/Documents/MGE/assets/shaders/main.vert");

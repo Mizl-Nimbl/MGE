@@ -15,6 +15,14 @@ Render::~Render()
     delete sharpenshader;
 }
 
+void Render::initializelights()
+{
+    Light pointlight(245, 86, 12, 100, glm::vec3(2.0f, 3.0f, 0.0f), 1.0f);
+    Light flashlight(171, 188, 224, 69, cameraPos, cameraFront, 1.0f);
+    lights.push_back(pointlight);
+    lights.push_back(flashlight);
+}
+
 void Render::initializeshaders()
 {
     skyboxshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/skybox.vert", "/home/mizl/Documents/MGE/assets/shaders/skybox.frag");
@@ -145,8 +153,25 @@ void Render::render(GLFWwindow* window)
     //setDirectionalLight(mainshader, 2, 200, 200, 200, 40, glm::vec3(-2.0f, 10.0f, -1.0f));
     //mainShader->setVec3("lightPos", lightPos);
     mainshader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
-    setPointLight(mainshader, 1, 245, 86, 12, 100, glm::vec3(2.0f, 3.0f, 0.0f), 1.0f, 0.09f, 0.032f);
-    setSpotLight(mainshader, 0, 171, 188, 224, 69, cameraPos, cameraFront, glm::cos(glm::radians(17.5f)), glm::cos(glm::radians(25.0f)), 1.0f, 0.09f, 0.032f);
+    //setPointLight(mainshader, 1, 245, 86, 12, 100, glm::vec3(2.0f, 3.0f, 0.0f), 1.0f, 0.09f, 0.032f);
+    //setSpotLight(mainshader, 0, 171, 188, 224, 69, cameraPos, cameraFront, glm::cos(glm::radians(17.5f)), glm::cos(glm::radians(25.0f)), 1.0f, 0.09f, 0.032f);
+    lights[1].setPosition(cameraPos);
+    lights[1].setDirection(cameraFront);
+    for (int i = 0; i < lights.size(); i++) 
+    {
+        std::string index = std::to_string(i);
+        mainshader->setInt("light[" + index + "].type", lights[i].getType());
+        mainshader->setVec3("light[" + index + "].position", lights[i].getPosition());
+        mainshader->setVec3("light[" + index + "].direction", lights[i].getDirection());
+        mainshader->setVec3("light[" + index + "].ambient", glm::vec3(lights[i].getRed() * 0.009f , lights[i].getGreen() * 0.009f, lights[i].getBlue() * 0.009f));
+        mainshader->setVec3("light[" + index + "].diffuse", glm::vec3(lights[i].getRed(), lights[i].getGreen(), lights[i].getBlue()));
+        mainshader->setVec3("light[" + index + "].specular", glm::vec3(lights[i].getRed(), lights[i].getGreen(), lights[i].getBlue()));
+        mainshader->setFloat("light[" + index + "].cutOff", lights[i].getCutOff());
+        mainshader->setFloat("light[" + index + "].outerCutOff", lights[i].getOuterCutOff());
+        mainshader->setFloat("light[" + index + "].constant", lights[i].getConstant());
+        mainshader->setFloat("light[" + index + "].linear", lights[i].getLinear());
+        mainshader->setFloat("light[" + index + "].quadratic", lights[i].getQuadratic());
+    }
     //lights ending here
 
     renderScene(mainshader);
@@ -172,6 +197,7 @@ void Render::render(GLFWwindow* window)
     GLenum err;
 }
 
+/*
 void Render::setDirectionalLight(Shader* g, int i, int re, int gr, int bl, int al, glm::vec3 direction)
 {
     float bright = (al / 255.0f);
@@ -219,3 +245,4 @@ void Render::setSpotLight(Shader* g, int i, int re, int gr, int bl, int al, glm:
     g->setFloat("light[" + std::to_string(i) + "].linear", linear);
     g->setFloat("light[" + std::to_string(i) + "].quadratic", quadratic);
 }
+*/

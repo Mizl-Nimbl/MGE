@@ -16,6 +16,8 @@ add_subdirectory(shaders)
 add_subdirectory(systems)
 add_subdirectory(textures)
 add_subdirectory(mesh)
+add_subdirectory(model)
+add_subdirectory(light)
 
 include(CTest)
 enable_testing()

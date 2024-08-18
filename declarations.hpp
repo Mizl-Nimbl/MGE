@@ -8,6 +8,7 @@ class Shader;
 class Textures;
 class Mesh;
 class Model;
+class Light;
 
 extern Systems s;
 extern Render r;
@@ -16,5 +17,6 @@ extern Shader g;
 extern Textures t;
 extern Mesh h;
 extern Model n;
+extern Light l;
 
 #endif /* declarations_hpp */
