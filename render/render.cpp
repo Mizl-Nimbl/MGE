@@ -117,6 +117,11 @@ void Render::renderScene(Shader* shader)
     for (int i = 0; i < scenes.size(); i++)
     {
         std::vector<Model> models = scenes.at(i).getModels(); // Store models in a local variable
+        std::sort(models.begin(), models.end(), [this](Model a, Model b) {
+            float distanceA = glm::length(this->cameraPos - a.getLocation());
+            float distanceB = glm::length(this->cameraPos - b.getLocation());
+            return distanceA > distanceB;
+        });
         for (int j = 0; j < models.size(); j++)
         {
             glm::mat4 model = glm::mat4(1.0f);
@@ -232,8 +237,8 @@ void Render::render(GLFWwindow* window)
     yaw   += s.xoffset;
     pitch += s.yoffset;
 
-    s.xoffset *= 0.7;
-    s.yoffset *= 0.7;
+    s.xoffset *= 0.5 + 0.2;
+    s.yoffset *= 0.5 + 0.2;
 
     if(pitch > 89.0f)
     {

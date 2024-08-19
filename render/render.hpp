@@ -8,6 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <math.h>
 #include <vector>
+#include <algorithm>
 
 #include "../systems/systems.hpp"
 #include "../shaders/shader.hpp"

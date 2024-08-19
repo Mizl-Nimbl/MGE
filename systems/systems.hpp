@@ -36,8 +36,10 @@ public:
     unsigned int depthmapFBO;
     unsigned int RBO;
     GLFWwindow* window;
-    int windoww = 1280;
-    int windowh = 720;
+    int windoww = 1920;
+    int windowh = 1080;
+    int monitorcount;
+    GLFWmonitor** monitors = glfwGetMonitors(&monitorcount);
     int SHADOW_WIDTH = 1024;
     int SHADOW_HEIGHT = 1024;
     glm::vec3 origin = glm::vec3(0.0f, 0.0f, 0.0f);

@@ -18,7 +18,8 @@ bool Systems::initialize()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    window = glfwCreateWindow(1280, 720, "MGE", NULL, NULL);
+    window = glfwCreateWindow(windoww, windowh, "MGE", NULL, NULL);
+    glfwSetWindowMonitor(window, NULL, 0, 0, windoww, windowh, 144);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -51,7 +52,7 @@ bool Systems::initialize()
     //framebuffer calls
     glGenRenderbuffers(1, &RBO);
     glBindRenderbuffer(GL_RENDERBUFFER, RBO);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 1280, 720);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, windoww, windowh);
     glGenFramebuffers(1, &FBO);
     glBindFramebuffer(GL_FRAMEBUFFER, FBO);
     framebuffertex = initFramebuffer();
@@ -242,7 +243,7 @@ unsigned int Systems::initFramebuffer()
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, 1280, 720, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, windoww, windowh, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); 
