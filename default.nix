@@ -36,6 +36,7 @@ pkgs.stdenv.mkDerivation {
     pkgs.ninja
     pkgs.libGL
     pkgs.assimp
+    pkgs.tinyxml-2
     glad
     pkgs.wayland
     pkgs.wayland-protocols
@@ -47,7 +48,7 @@ pkgs.stdenv.mkDerivation {
   buildPhase = ''
     mkdir -p $TMPDIR/build
     cd $TMPDIR/build
-    export LDFLAGS="-L${pkgs.libGL}/lib -L${pkgs.glm}/lib -L${pkgs.glfw}/lib -L${glad}/lib -L${pkgs.wayland}/lib -L${pkgs.assimp}/lib"
+    export LDFLAGS="-L${pkgs.libGL}/lib -L${pkgs.glm}/lib -L${pkgs.glfw}/lib -L${glad}/lib -L${pkgs.wayland}/lib -L${pkgs.assimp}/lib -L${pkgs.tinyxml-2}/lib"
     cmake -G Ninja $src
     ninja -v
     '';

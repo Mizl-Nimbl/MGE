@@ -13,9 +13,12 @@ void Model::setLocation(glm::vec3 newLocation) {
     location = newLocation;
 }
 
-// Setter method for rotation
 void Model::setRotation(glm::vec3 newRotation) {
     rotation = newRotation;
+}
+
+void Model::setScale(glm::vec3 newScale) {
+    scale = newScale;
 }
 
 glm::vec3 Model::getLocation()
@@ -26,6 +29,11 @@ glm::vec3 Model::getLocation()
 glm::vec3 Model::getRotation()
 {
     return rotation;
+}
+
+glm::vec3 Model::getScale()
+{
+    return scale;
 }
 
 void Model::loadModel(std::string const &path)

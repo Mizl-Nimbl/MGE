@@ -36,9 +36,15 @@ uniform sampler2D shadowMap;
 
 void main()
 {
+    vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+    float closestDepth = texture(shadowMap, projCoords.xy).r; 
+    float currentDepth = projCoords.z;
+    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
     vec4 result = vec4(0.0);
     for(int i = 0; i < lightCount; i++)
     {
+        
         float theta;
         float epsilon;
         float intensity;
@@ -85,11 +91,13 @@ void main()
         vec3 reflectDir = reflect(-lightDir, norm);
         diff = max(dot(norm, lightDir), 0.0);
         vec3 blendedDir = normalize(mix(reflectDir, halfwayDir, 0.5));
-        spec = pow(max(dot(viewDir, blendedDir), 0.0), (material.shininess) * 3.0);
+        
 
         vec4 diffuse = vec4(0.0);
         vec4 specular = vec4(0.0);
         for (int j = 0; j < 16; j++) {
+            float shininess = texture(material.specular[j], Texture).r;
+            spec = pow(max(dot(viewDir, blendedDir), 0.0), (shininess) * 7.0);
             vec4 texColor = texture(material.diffuse[j], Texture).rgba;
             vec4 texSpec = texture(material.specular[j], Texture).rgba;
             diffuse += vec4(light[i].diffuse, 1) * diff * texColor;
@@ -113,7 +121,7 @@ void main()
             specular *= attenuation;
         }
         
-        result += (ambient + diffuse + specular);
+        result += (ambient + (1.0 - shadow) * (diffuse + specular));
     }
     for (int j = 0; j < 16; j++) {
         result.a = texture(material.diffuse[j], Texture).a;

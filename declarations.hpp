@@ -9,6 +9,7 @@ class Textures;
 class Mesh;
 class Model;
 class Light;
+class Scene;
 
 extern Systems s;
 extern Render r;
@@ -18,5 +19,6 @@ extern Textures t;
 extern Mesh h;
 extern Model n;
 extern Light l;
+extern Scene c;
 
 #endif /* declarations_hpp */

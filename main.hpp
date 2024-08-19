@@ -9,6 +9,7 @@
 #include "mesh/mesh.cpp"
 #include "model/model.cpp"
 #include "light/light.cpp"
+#include "scene/scene.cpp"
 #include "declarations.hpp"
 
 class Main 

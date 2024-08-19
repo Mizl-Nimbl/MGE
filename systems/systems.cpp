@@ -79,7 +79,7 @@ bool Systems::initialize()
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
-    //rebing original buffer
+    //rebind original buffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     //frameVAO
     float quadVertices[] = {
@@ -163,19 +163,53 @@ bool Systems::initialize()
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_FRAMEBUFFER_SRGB);
     //load models
-    //Model backpack("/home/mizl/Documents/MGE/assets/models/backpack/backpack.obj");
-    //backpack.setLocation(glm::vec3(0.0f, 3.0f, 0.0f));
-    Model test("/home/mizl/Documents/MGE/assets/models/test/test.obj");
-    test.setLocation(glm::vec3(0.0f, 0.0f, 0.0f));
-    Model window("/home/mizl/Documents/MGE/assets/models/window/window.obj");
-    window.setLocation(glm::vec3(0.0f, 3.0f, 0.0f));
-    Model skull("/home/mizl/Documents/MGE/assets/models/skull/skull.obj");
-    skull.setLocation(glm::vec3(3.0f, 0.0f, 0.0f));
-    //models.push_back(backpack);
-    models.push_back(test);
-    models.push_back(skull);
-    models.push_back(window);
+    //Model test("/home/mizl/Documents/MGE/assets/models/test/test.obj");
+    //test.setLocation(glm::vec3(0.0f, 0.0f, 0.0f));
+    //models.push_back(test);
+    //Model skull("/home/mizl/Documents/MGE/assets/models/skull/skull.obj");
+    //skull.setLocation(glm::vec3(3.0f, 0.0f, 0.0f));
+    //models.push_back(skull);
+    //Model brain("/home/mizl/Documents/MGE/assets/models/brain/brain.obj");
+    //brain.setLocation(glm::vec3(3.0f, 0.0f, 0.0f));
+    //models.push_back(brain);
+    //Model window("/home/mizl/Documents/MGE/assets/models/window/window.obj");
+    //window.setLocation(glm::vec3(0.0f, 3.0f, 0.0f));
+    //models.push_back(window);
+
+    //glm::vec3 loc1 = glm::vec3(0.0f, 0.0f, 0.0f);
+    //glm::vec3 rot1 = glm::vec3(0.0f, 0.0f, 0.0f);
+    //glm::vec3 sca1 = glm::vec3(1.0f, 1.0f, 1.0f);
+    //Scene mainscene(loc1, rot1, sca1);
+    //mainscene.setModel("/home/mizl/Documents/MGE/assets/models/test/test.obj");
+    //mainscene.setModel("/home/mizl/Documents/MGE/assets/models/skull/skull.obj");
+    //mainscene.setModel("/home/mizl/Documents/MGE/assets/models/brain/brain.obj");
+    //mainscene.setModel("/home/mizl/Documents/MGE/assets/models/window/window.obj");
+    //mainscene.setGlobalLocation(glm::vec3(0.0f, -3.0f, 0.0f));
+    //mainscene.setModelLocation(0, glm::vec3(0.0f, 0.0f, 0.0f));
+    //mainscene.setModelLocation(1, glm::vec3(3.0f, 0.0f, 0.0f));
+    //mainscene.setModelLocation(2, glm::vec3(3.0f, 0.0f, 0.0f));
+    //mainscene.setModelLocation(3, glm::vec3(0.0f, 3.0f, 0.0f));
+    //scenes.push_back(mainscene);
+
+    scenes = getScenes();
+
     return true;
+}
+
+std::vector<Scene> Systems::getScenes()
+{
+    std::vector<Scene> scenes;
+    std::string scenesFolderPath = "/home/mizl/Documents/MGE/assets/scenes";
+
+    for (const auto& entry : std::filesystem::directory_iterator(scenesFolderPath))
+    {
+        if (entry.path().extension() == ".xml")
+        {
+            Scene scene(entry.path().string());
+            scenes.push_back(scene);
+        }
+    }
+    return scenes;
 }
 
 void Systems::framebuffer_size_callback(GLFWwindow* window, int width, int height)

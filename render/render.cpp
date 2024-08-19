@@ -105,45 +105,83 @@ void Render::initializeSSAO()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+}
 
-
+void Render::initializescenes()
+{
+    scenes = s.scenes;
 }
 
 void Render::renderScene(Shader* shader)
 {
-    for (int i = 0; i < s.models.size(); i++)
+    for (int i = 0; i < scenes.size(); i++)
     {
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, s.models.at(i).getLocation());
-        glm::vec3 rotation = s.models.at(i).getRotation();
-        model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-        shader->setMat4("model", model);
-        n.DrawModel(s.models.at(i));
+        std::vector<Model> models = scenes.at(i).getModels(); // Store models in a local variable
+        for (int j = 0; j < models.size(); j++)
+        {
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, models[j].getLocation());
+            glm::vec3 rotation = models[j].getRotation();
+            glm::vec3 scale = models[j].getScale();
+            model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+            model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+            model = glm::scale(model, scale);
+            shader->setMat4("model", model);
+            models[j].DrawModel(models[j]);
+        }
     }
 }
 
 void Render::renderShadowMap()
 {
-    glCullFace(GL_FRONT);
-    float near_plane = 0.1f;
-    float far_plane = 10.0f;
-    glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-    //glm::mat4 lightView = glm::lookAt(glm::vec3(-2.0f, 10.0f, -1.0f), glm::vec3(0.0f, 0.0f,  0.0f), glm::vec3(0.0f, 1.0f,  0.0f));
-    glm::mat4 lightView = glm::mat4(glm::mat3(glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp)));
-    lightSpaceMatrix = lightProjection * lightView;
-    depthshader->use();
-    depthshader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
+    for (int i = 0; i < lights.size(); i++)
+    {
+        glCullFace(GL_FRONT);
+        if (lights[i].getType() == 0 || lights[i].getType() == 2)
+        {
+            glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
+            glm::mat4 lightView = glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + lights[i].getDirection(), glm::vec3(0.0f, 1.0f, 0.0f));
+            glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+            depthshader->use();
+            depthshader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
 
-    glViewport(0, 0, s.SHADOW_WIDTH, s.SHADOW_HEIGHT);
-    glBindFramebuffer(GL_FRAMEBUFFER, s.depthmapFBO);
-    glClear(GL_DEPTH_BUFFER_BIT);
+            glViewport(0, 0, s.SHADOW_WIDTH, s.SHADOW_HEIGHT);
+            glBindFramebuffer(GL_FRAMEBUFFER, s.depthmapFBO);
+            glClear(GL_DEPTH_BUFFER_BIT);
 
-    renderScene(depthshader);
+            renderScene(depthshader);
+        }
+        else if (lights[i].getType() == 1)
+        {
+            float aspect = (float)s.SHADOW_WIDTH / (float)s.SHADOW_HEIGHT;
+            glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), aspect, 0.1f, 100.0f);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glCullFace(GL_BACK);
+            std::vector<glm::mat4> shadowTransforms;
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + glm::vec3( 1.0,  0.0,  0.0), glm::vec3(0.0, -1.0,  0.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + glm::vec3(-1.0,  0.0,  0.0), glm::vec3(0.0, -1.0,  0.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + glm::vec3( 0.0,  1.0,  0.0), glm::vec3(0.0,  0.0,  1.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + glm::vec3( 0.0, -1.0,  0.0), glm::vec3(0.0,  0.0, -1.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + glm::vec3( 0.0,  0.0,  1.0), glm::vec3(0.0, -1.0,  0.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + glm::vec3( 0.0,  0.0, -1.0), glm::vec3(0.0, -1.0,  0.0)));
+
+            depthshader->use();
+            for (unsigned int i = 0; i < 6; ++i)
+            {
+                depthshader->setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
+            }
+            depthshader->setFloat("far_plane", 100.0f);
+            depthshader->setVec3("lightPos", lights[i].getPosition());
+
+            glViewport(0, 0, s.SHADOW_WIDTH, s.SHADOW_HEIGHT);
+            glBindFramebuffer(GL_FRAMEBUFFER, s.depthmapFBO);
+            glClear(GL_DEPTH_BUFFER_BIT);
+
+            renderScene(depthshader);
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glCullFace(GL_BACK);
+    }
 }
 
 void Render::renderSSAO()
@@ -177,7 +215,7 @@ void Render::renderSSAO()
 
 void Render::render(GLFWwindow* window)
 {
-    renderShadowMap();
+    //renderShadowMap();
     glViewport(0, 0, s.windoww, s.windowh);
     //first pass
     glBindFramebuffer(GL_FRAMEBUFFER, s.FBO);
@@ -247,14 +285,13 @@ void Render::render(GLFWwindow* window)
     mainshader->setFloat("material.shininess", 32.0f);
 
     //lights starting here
-    //setDirectionalLight(mainshader, 2, 200, 200, 200, 40, glm::vec3(-2.0f, 10.0f, -1.0f));
-    //mainShader->setVec3("lightPos", lightPos);
     mainshader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
-    //setPointLight(mainshader, 1, 245, 86, 12, 100, glm::vec3(2.0f, 3.0f, 0.0f), 1.0f, 0.09f, 0.032f);
-    //setSpotLight(mainshader, 0, 171, 188, 224, 69, cameraPos, cameraFront, glm::cos(glm::radians(17.5f)), glm::cos(glm::radians(25.0f)), 1.0f, 0.09f, 0.032f);
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, s.depthmapFBO);
+    mainshader->setInt("shadowMap", 3);
     lights[0].setPosition(cameraPos);
     lights[0].setDirection(cameraFront);
-    for (int i = 0; i < lights.size(); i++) 
+    for (int i = 0; i < lights.size(); i++)
     {
         std::string index = std::to_string(i);
         mainshader->setInt("light[" + index + "].type", lights[i].getType());
@@ -302,53 +339,3 @@ void Render::render(GLFWwindow* window)
     glfwPollEvents();
     GLenum err;
 }
-
-/*
-void Render::setDirectionalLight(Shader* g, int i, int re, int gr, int bl, int al, glm::vec3 direction)
-{
-    float bright = (al / 255.0f);
-    float red    = (re / 255.0f) * bright;
-    float green  = (gr / 255.0f) * bright;
-    float blue   = (bl / 255.0f) * bright;
-    g->setInt("light[" + std::to_string(i) + "].type", 0);
-    g->setVec3("light[" + std::to_string(i) + "].direction", direction);
-    g->setVec3("light[" + std::to_string(i) + "].ambient", glm::vec3(red * 0.009f , green * 0.009f, blue * 0.009f));
-    g->setVec3("light[" + std::to_string(i) + "].diffuse", glm::vec3(red, green, blue));
-    g->setVec3("light[" + std::to_string(i) + "].specular", glm::vec3(red, green, blue));
-}
-
-void Render::setPointLight(Shader* g, int i, int re, int gr, int bl, int al, glm::vec3 position, float constant, float linear, float quadratic)
-{
-    float bright = (al / 255.0f);
-    float red    = (re / 255.0f) * bright;
-    float green  = (gr / 255.0f) * bright;
-    float blue   = (bl / 255.0f) * bright;
-    g->setInt("light[" + std::to_string(i) + "].type", 1);
-    g->setVec3("light[" + std::to_string(i) + "].ambient", glm::vec3(red * 0.009f , green * 0.009f, blue * 0.009f));
-    g->setVec3("light[" + std::to_string(i) + "].diffuse", glm::vec3(red, green, blue));
-    g->setVec3("light[" + std::to_string(i) + "].specular", glm::vec3(red, green, blue));
-    g->setVec3("light[" + std::to_string(i) + "].position", position);
-    g->setFloat("light[" + std::to_string(i) + "].constant", constant);
-    g->setFloat("light[" + std::to_string(i) + "].linear", linear);
-    g->setFloat("light[" + std::to_string(i) + "].quadratic", quadratic);
-}
-
-void Render::setSpotLight(Shader* g, int i, int re, int gr, int bl, int al, glm::vec3 position, glm::vec3 direction, float cutOff, float outerCutOff, float constant, float linear, float quadratic)
-{
-    float bright = (al / 255.0f);
-    float red    = (re / 255.0f) * bright;
-    float green  = (gr / 255.0f) * bright;
-    float blue   = (bl / 255.0f) * bright;
-    g->setInt("light[" + std::to_string(i) + "].type", 2);
-    g->setVec3("light[" + std::to_string(i) + "].ambient", glm::vec3(red * 0.009f , green * 0.009f, blue * 0.009f));
-    g->setVec3("light[" + std::to_string(i) + "].diffuse", glm::vec3(red, green, blue));
-    g->setVec3("light[" + std::to_string(i) + "].specular", glm::vec3(red, green, blue));
-    g->setVec3("light[" + std::to_string(i) + "].position", position);
-    g->setVec3("light[" + std::to_string(i) + "].direction", direction);
-    g->setFloat("light[" + std::to_string(i) + "].cutOff", cutOff);
-    g->setFloat("light[" + std::to_string(i) + "].outerCutOff", outerCutOff);
-    g->setFloat("light[" + std::to_string(i) + "].constant", constant);
-    g->setFloat("light[" + std::to_string(i) + "].linear", linear);
-    g->setFloat("light[" + std::to_string(i) + "].quadratic", quadratic);
-}
-*/

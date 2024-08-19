@@ -1,0 +1,19 @@
+<Scene>
+    <Location x="3.0" y="-0.2" z="-1.4" />
+    <Rotation x="0.0" y="0.0" z="0.0" />
+    <Scale x="1.0" y="1.0" z="1.0" />
+    <Model>
+        <Name>Brain</Name>
+        <Path>/home/mizl/Documents/MGE/assets/models/brain/brain.obj</Path>
+        <Location x="0.0" y="0.0" z="0.0" />
+        <Rotation x="0.0" y="0.0" z="0.0" />
+        <Scale x="1.0" y="1.0" z="1.0" />
+    </Model>
+    <Model>
+        <Name>Skull</Name>
+        <Path>/home/mizl/Documents/MGE/assets/models/skull/skull.obj</Path>
+        <Location x="0.0" y="0.0" z="0.0" />
+        <Rotation x="0.0" y="0.0" z="0.0" />
+        <Scale x="1.0" y="1.0" z="1.0" />
+    </Model>
+</Scene>
