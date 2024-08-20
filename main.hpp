@@ -10,6 +10,8 @@
 #include "model/model.cpp"
 #include "light/light.cpp"
 #include "scene/scene.cpp"
+#include "audio/audio.cpp"
+#include "audiobank/audiobank.cpp"
 #include "declarations.hpp"
 
 class Main 
@@ -22,6 +24,8 @@ public:
         glDeleteBuffers(1, &s.VBO);
         glDeleteBuffers(1, &s.EBO);
         glDeleteFramebuffers(1, &s.FBO);
+        glDeleteFramebuffers(1, &s.depthmapFBO);
+        glDeleteRenderbuffers(1, &s.RBO);
         glfwTerminate();
         running = false;
     }

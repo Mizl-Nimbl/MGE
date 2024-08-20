@@ -13,10 +13,12 @@ let
       mkdir -p $out/include/glad
       mkdir -p $out/include/KHR
       mkdir -p $out/include/stb
+      mkdir -p $out/include/miniaudio
       mkdir -p $out/lib
       cp ./include/glad/glad.h $out/include/glad/
       cp ./include/KHR/khrplatform.h $out/include/KHR/
       cp ./include/stb/stb_image.h $out/include/stb/
+      cp ./include/miniaudio/miniaudio.h $out/include/miniaudio/
       gcc -c glad.c -o $out/lib/glad.o
       ar rcs $out/lib/libglad.a $out/lib/glad.o
     '';

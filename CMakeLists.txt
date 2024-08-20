@@ -9,6 +9,8 @@ find_package(assimp REQUIRED)
 find_package(tinyxml2 REQUIRED)
 find_library(GLAD_LIBRARY glad PATHS /nix/store)
 
+add_compile_options(-Wno-unused-result)
+
 include_directories(${OPENGL_INCLUDE_DIRS} ${GLFW_INCLUDE_DIRS} ${GLM_INCLUDE_DIRS} ${ASSIMP_INCLUDE_DIRS} ${TinyXML2_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR}/include)
 
 add_subdirectory(input)
@@ -20,6 +22,8 @@ add_subdirectory(mesh)
 add_subdirectory(model)
 add_subdirectory(light)
 add_subdirectory(scene)
+add_subdirectory(audio)
+add_subdirectory(audiobank)
 
 include(CTest)
 enable_testing()

@@ -10,6 +10,8 @@ class Mesh;
 class Model;
 class Light;
 class Scene;
+class Audio;
+class Audiobank;
 
 extern Systems s;
 extern Render r;
@@ -20,5 +22,7 @@ extern Mesh h;
 extern Model n;
 extern Light l;
 extern Scene c;
+extern Audio a;
+extern Audiobank b;
 
 #endif /* declarations_hpp */

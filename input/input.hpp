@@ -2,6 +2,8 @@
 #define input_hpp
 
 #include "../render/render.hpp"
+#include "../audio/audio.hpp"
+#include "../audiobank/audiobank.hpp"
 #include "../declarations.hpp"
 
 #include <GLFW/glfw3.h>

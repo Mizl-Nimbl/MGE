@@ -11,9 +11,12 @@ Mesh h;
 Model n;
 Light l;
 Scene c;
+Audio a;
+Audiobank b;
 
 int main() 
 {
+    std::cout << "Initializing" << std::endl;
     if (s.initialize() == true)
     {
         r.initializeshaders();
@@ -21,14 +24,13 @@ int main()
         r.initializelights();
         r.initializeSSAO();
         r.initializescenes();
+        b.loadaudio();
         m.running = true;
         //this code needs to be HERE and NOT in s.initialize
         std::string vertexshadersource = g.readShader("/home/mizl/Documents/MGE/assets/shaders/main.vert");
         unsigned int vertexShader;
         vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        
     }
-    std::cout << "Initializing" << std::endl;
     while (m.running) 
     {
         if (glfwWindowShouldClose(s.window))
@@ -36,6 +38,7 @@ int main()
             m.stop();
         }
         i.processInput(s.window);
+        b.playaudiobank(b.audiobank);
         r.render(s.window);
     }
     return 0;

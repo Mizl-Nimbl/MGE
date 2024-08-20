@@ -35,6 +35,7 @@ void Render::initializeshaders()
     invertshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/invert.frag");
     greyshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/greyscale.frag");
     edgeshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/edgedetection.frag");
+    edgehdrshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/edgehdr.frag");
     sharpenshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/sharpen.frag");
     ssaoshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/ssao/ssao.vert", "/home/mizl/Documents/MGE/assets/shaders/ssao/ssao.frag");
     ssaoblurshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/ssao/ssao.vert", "/home/mizl/Documents/MGE/assets/shaders/ssao/blurssao.frag");

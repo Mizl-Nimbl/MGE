@@ -8,6 +8,8 @@
 /* NEVER ADD "#include ../render/render.hpp" here. biggest waste of 1 hour ever. */
 #include "../scene/scene.hpp"
 #include "../shaders/shader.hpp"
+#include "../audio/audio.hpp"
+#include "../audiobank/audiobank.hpp"
 #include "../declarations.hpp"
 
 #include <string>

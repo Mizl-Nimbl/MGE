@@ -27,4 +27,16 @@ void Input::processInput(GLFWwindow* window)
     {
         r.cameraPos += glm::normalize(glm::cross(r.cameraFront, r.cameraUp)) * cameraSpeed;
     }
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+    {
+        r.cameraPos += cameraSpeed * glm::vec3(0.0f, 1.0f, 0.0f);
+    }
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+    {
+        r.cameraPos -= cameraSpeed * glm::vec3(0.0f, 1.0f, 0.0f);
+    }
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    {
+        b.audiobank[0]->queue();
+    }
 }

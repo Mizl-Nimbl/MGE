@@ -77,7 +77,8 @@ private:
     Shader* blurshader;
     Shader* invertshader; 
     Shader* greyshader;
-    Shader* edgeshader; 
+    Shader* edgeshader;
+    Shader* edgehdrshader;
     Shader* sharpenshader;
     Shader* ssaoshader;
     Shader* ssaoblurshader;

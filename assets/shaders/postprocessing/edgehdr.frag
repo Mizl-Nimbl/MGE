@@ -4,6 +4,7 @@ out vec4 FragColor;
 in vec2 TexCoords;
 
 uniform sampler2D screenTexture;
+uniform sampler2D ssao;
 
 const float offset = 1.0 / 300.0;  
 
@@ -38,6 +39,18 @@ void main()
     {
         col += sampleTex[i] * kernel[i];
     }
-    
-    FragColor = vec4(col, 1.0);
+
+    col *= 0.2;
+
+    // Mix col with white color to reduce its influence
+    const float gamma = 1.3;
+    vec3 hdrColour = texture(screenTexture, TexCoords).rgb * texture(ssao, TexCoords).r;
+    vec3 mapped = hdrColour / (hdrColour + vec3(1.0));
+    mapped = pow(mapped, vec3(1.0 / gamma));
+
+    // Blend edge detection result with hdrColour
+    float edgeOpacity = 0.001; // Adjust this value to control the opacity of the edge detection
+    vec3 finalColor = mix(mapped, col, edgeOpacity);
+
+    FragColor = vec4(finalColor, 1.0);
 }
