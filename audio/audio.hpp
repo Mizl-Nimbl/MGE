@@ -33,6 +33,8 @@ public:
     void set3droloff(float rolloff);
     void set3dspread(float spread);
 
+    void setqueuesignal(int signal);
+
     float getvolume();
     float getpitch();
     bool getloop();
@@ -41,7 +43,11 @@ public:
     float get3ddistance();
     float get3droloff();
     float get3dspread();
+
+    int getqueuesignal();
+    bool getqueued();
 private:
+    int queueSignal;
     bool deviceinit;
     bool decoderinit;
     float volume;
@@ -55,6 +61,8 @@ private:
     float spread;
     ma_decoder decoder;
     ma_device device;
+    ma_engine engine;
+    ma_sound sound;
 };
 
 #endif /* AUDIO_HPP */

@@ -96,6 +96,62 @@ Scene::Scene(std::string path)
 
         modelCount++;
     }
+
+    for (tinyxml2::XMLElement* audioElement = root->FirstChildElement("Audio"); audioElement; audioElement = audioElement->NextSiblingElement("Audio")) 
+    {
+        const char* audioPath = audioElement->FirstChildElement("Path")->GetText();
+        if (!audioPath)
+        {
+            std::cerr << "No audio path in XML file: " << path << std::endl;
+        }
+        Audio* audio = new Audio(audioPath);
+
+        float vol;
+        tinyxml2::XMLElement* audioVolumeElement = audioElement->FirstChildElement("Volume");
+        if (audioVolumeElement) 
+        {
+            audioVolumeElement->QueryFloatText(&vol);
+            audio->setvolume(vol);
+        }
+        int qsig;
+        tinyxml2::XMLElement* audioQueueSignalElement = audioElement->FirstChildElement("QueueSignal");
+        if (audioQueueSignalElement) 
+        {
+            audioQueueSignalElement->QueryIntText(&qsig);
+            audio->setqueuesignal(qsig);
+        }
+        bool loop;
+        tinyxml2::XMLElement* audioLoopElement = audioElement->FirstChildElement("Loop");
+        if (audioLoopElement) 
+        {
+            audioLoopElement->QueryBoolText(&loop);
+            audio->setloop(loop);
+        }
+        glm::vec3 pos;
+        tinyxml2::XMLElement* audioPositionElement = audioElement->FirstChildElement("Position");
+        if (audioPositionElement) 
+        {
+            audioPositionElement->QueryFloatAttribute("x", &pos.x);
+            audioPositionElement->QueryFloatAttribute("y", &pos.y);
+            audioPositionElement->QueryFloatAttribute("z", &pos.z);
+            audio->set3dposition(pos.x, pos.y, pos.z);
+        }
+        glm::vec3 vel;
+        tinyxml2::XMLElement* audioVelocityElement = audioElement->FirstChildElement("Velocity");
+        if (audioVelocityElement) 
+        {
+            audioVelocityElement->QueryFloatAttribute("x", &vel.x);
+            audioVelocityElement->QueryFloatAttribute("y", &vel.y);
+            audioVelocityElement->QueryFloatAttribute("z", &vel.z);
+            audio->set3dvelocity(vel.x, vel.y, vel.z);
+        }
+        std::cout << "Connecting signal for audio: " << audio->getqueuesignal() << std::endl;
+        e.connect(audio->getqueuesignal(), [this, audio]() { b.queueAudio(audio->getqueuesignal()); });
+        std::cout << "Connected signal for audio: " << audio->getqueuesignal() << std::endl;
+        audios.push_back(audio);
+    }
+    b.audiobank.insert(b.audiobank.end(), audios.begin(), audios.end());
+    std::cout << "Loaded scene with " << modelCount << " models and " << audios.size() << " audio files." << std::endl;
 }
 
 Model Scene::getModel(int index)

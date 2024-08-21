@@ -5,12 +5,12 @@ Audio::Audio()
 
 Audio::~Audio()
 {
-    if (deviceinit == true)
-    {
+    ma_sound_uninit(&sound);
+    ma_engine_uninit(&engine);
+    if (deviceinit) {
         ma_device_uninit(&device);
     }
-    if (decoderinit == true)
-    {
+    if (decoderinit) {
         ma_decoder_uninit(&decoder);
     }
     std::cout << "Audio uninitialized and stopped successfully" << std::endl;
@@ -31,39 +31,18 @@ Audio::Audio(const char* filename)
     spread = 1.0f;
 
     ma_result result = ma_decoder_init_file(filename, NULL, &decoder);
-    if (result != MA_SUCCESS) 
-    {
+    // Initialize the engine
+    result = ma_engine_init(NULL, &engine);
+    if (result != MA_SUCCESS) {
+        std::cout << "Failed to initialize audio engine" << std::endl;
+        return;
+    }
+
+    // Initialize the sound
+    result = ma_sound_init_from_file(&engine, filename, MA_SOUND_FLAG_STREAM, NULL, NULL, &sound);
+    if (result != MA_SUCCESS) {
         std::cout << "Failed to load audio file" << std::endl;
-        return;
-    }
-    decoderinit = true;
-
-    ma_device_config deviceConfig = ma_device_config_init(ma_device_type_playback);;
-    deviceConfig.playback.format = decoder.outputFormat;
-    deviceConfig.playback.channels = decoder.outputChannels;
-    deviceConfig.sampleRate = decoder.outputSampleRate;
-    deviceConfig.dataCallback = data_callback;
-    deviceConfig.pUserData = &decoder;
-
-    result = ma_device_init(NULL, &deviceConfig, &device);
-    if (result != MA_SUCCESS) 
-    {
-        std::cout << "Failed to initialize playback device" << std::endl;
-        ma_decoder_uninit(&decoder);
-        decoderinit = false;
-        return;
-    }
-
-    deviceinit = true;
-
-    result = ma_device_start(&device);
-    if (result != MA_SUCCESS) 
-    {
-        std::cout << "Failed to start playback device" << std::endl;
-        ma_device_uninit(&device);
-        ma_decoder_uninit(&decoder);
-        deviceinit = false;
-        decoderinit = false;
+        ma_engine_uninit(&engine);
         return;
     }
 }
@@ -96,22 +75,27 @@ void Audio::play()
 {
     if (queued == true)
     {
-        //ma_engine_set_volume_3d(&device, volume);
-        //ma_engine_set_pitch_3d(&device, pitch);
-        //ma_engine_set_looping_3d(&device, loop);
-        //ma_engine_set_position_3d(&device, position.x, position.y, position.z);
-        //ma_engine_set_velocity_3d(&device, velocity.x, velocity.y, velocity.z);
-        //ma_engine_set_distance_model_3d(&device, MA_DISTANCE_MODEL_LINEAR_ROLLOFF);
-        //ma_engine_set_rolloff_3d(&device, rolloff);
-        //ma_engine_set_spread_3d(&device, spread);
-        ma_device_start(&device);
+        ma_sound_set_volume(&sound, volume);
+        ma_sound_set_pitch(&sound, pitch);
+        ma_sound_set_looping(&sound, loop);
+        ma_sound_set_position(&sound, position.x, position.y, position.z);
+        ma_sound_set_velocity(&sound, velocity.x, velocity.y, velocity.z);
+        //ma_sound_set_distance_model(&sound, MA_DISTANCE_MODEL_LINEAR_ROLLOFF);
+        //ma_sound_set_rolloff(&sound, rolloff);
+        //ma_sound_set_spread(&sound, spread);
+        ma_sound_start(&sound);
+        queued = false;
     }
     else
     {
-        ma_device_stop(&device);
+        ma_sound_stop(&sound);
         ma_decoder_seek_to_pcm_frame(&decoder, 0);
     }
-    queued = false;
+}
+
+void Audio::setqueuesignal(int signal)
+{
+    queueSignal = signal;
 }
 
 void Audio::setvolume(float volume)
@@ -192,4 +176,14 @@ float Audio::get3droloff()
 float Audio::get3dspread()
 {
     return spread;
+}
+
+int Audio::getqueuesignal()
+{
+    return queueSignal;
+}
+
+bool Audio::getqueued()
+{
+    return queued;
 }

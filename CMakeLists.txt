@@ -24,6 +24,7 @@ add_subdirectory(light)
 add_subdirectory(scene)
 add_subdirectory(audio)
 add_subdirectory(audiobank)
+add_subdirectory(signalemitter)
 
 include(CTest)
 enable_testing()

@@ -1,10 +1,35 @@
 #include "audiobank.hpp"
 
-void Audiobank::playaudiobank(std::vector<Audio*> audiobank)
+Audiobank::Audiobank() 
+{
+    std::cout << "Audiobank constructor called" << std::endl;
+}
+
+void Audiobank::queueAudio(int signal)
 {
     for (int i = 0; i < audiobank.size(); i++)
     {
-        audiobank[i]->play();
+        if (audiobank[i]->getqueuesignal() == signal)
+        {
+            audiobank[i]->queue();
+            break;
+        }
+    }
+}
+
+void Audiobank::playaudiobank(std::vector<Audio*> audiobank)
+{
+    if (audiobank.size() == 0)
+    {
+        std::cout << "No audio files to play" << std::endl;
+        return;
+    }
+    for (int i = 0; i < audiobank.size(); i++)
+    {
+        if (audiobank[i]->getqueued())
+        {
+            audiobank[i]->play();
+        }
     }
 }
 

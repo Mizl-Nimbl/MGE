@@ -12,6 +12,9 @@
 #include <tinyxml2.h>
 
 #include "../model/model.hpp"
+#include "../audio/audio.hpp"
+#include "../audiobank/audiobank.hpp"
+#include "../signalemitter/signalemitter.hpp"
 #include "../declarations.hpp"
 
 class Scene
@@ -39,6 +42,7 @@ public:
     void setModelScale(int index, glm::vec3 newScale);
 private:
     std::vector<Model> models;
+    std::vector<Audio*> audios;
     glm::vec3 location;
     glm::vec3 rotation;
     glm::vec3 scale;

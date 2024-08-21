@@ -4,6 +4,7 @@
 #include "../render/render.hpp"
 #include "../audio/audio.hpp"
 #include "../audiobank/audiobank.hpp"
+#include "../signalemitter/signalemitter.hpp"
 #include "../declarations.hpp"
 
 #include <GLFW/glfw3.h>

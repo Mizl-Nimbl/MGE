@@ -12,6 +12,7 @@
 #include "scene/scene.cpp"
 #include "audio/audio.cpp"
 #include "audiobank/audiobank.cpp"
+#include "signalemitter/signalemitter.cpp"
 #include "declarations.hpp"
 
 class Main 

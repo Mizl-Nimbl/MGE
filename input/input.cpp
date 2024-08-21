@@ -37,6 +37,10 @@ void Input::processInput(GLFWwindow* window)
     }
     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
     {
-        b.audiobank[0]->queue();
+        e.emit(239498912);
+    }
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    {
+        e.emit(909377451);
     }
 }

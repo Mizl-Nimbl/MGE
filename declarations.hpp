@@ -12,6 +12,7 @@ class Light;
 class Scene;
 class Audio;
 class Audiobank;
+class SignalEmitter;
 
 extern Systems s;
 extern Render r;
@@ -24,5 +25,6 @@ extern Light l;
 extern Scene c;
 extern Audio a;
 extern Audiobank b;
+extern SignalEmitter e;
 
 #endif /* declarations_hpp */

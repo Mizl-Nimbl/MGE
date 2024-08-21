@@ -15,6 +15,8 @@
 class Audiobank
 {
 public:
+    Audiobank();
+    void queueAudio(int signal);
     void playaudiobank(std::vector<Audio*> audiobank); //play all audio in bank & dequeue
     void loadaudio(); //push to bank
     std::vector<Audio*> audiobank;
