@@ -13,6 +13,7 @@ class Scene;
 class Audio;
 class Audiobank;
 class SignalEmitter;
+class Font;
 
 extern Systems s;
 extern Render r;
@@ -26,5 +27,6 @@ extern Scene c;
 extern Audio a;
 extern Audiobank b;
 extern SignalEmitter e;
+extern Font f;
 
 #endif /* declarations_hpp */

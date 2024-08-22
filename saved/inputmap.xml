@@ -1,0 +1,16 @@
+<InputMap>
+    <KeyBindings
+        forward = "87"
+        backward = "83"
+        left = "65"
+        right = "68"
+        jump = "32"
+        crouch = "341"
+        sprint = "340"
+        quit = "256"
+        uparrow = "265"
+        downarrow = "264"
+        leftarrow = "263"
+        rightarrow = "262"
+    />
+</InputMap>

@@ -29,6 +29,7 @@ void Render::initializeshaders()
 {
     skyboxshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/skybox.vert", "/home/mizl/Documents/MGE/assets/shaders/skybox.frag");
     mainshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/main.vert", "/home/mizl/Documents/MGE/assets/shaders/main.frag");
+    textshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/text/text.vert", "/home/mizl/Documents/MGE/assets/shaders/text/text.frag");
     depthshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/depth.vert", "/home/mizl/Documents/MGE/assets/shaders/depth.frag");
     hdrshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/hdr.frag");
     blurshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/blur.frag");
@@ -111,6 +112,19 @@ void Render::initializeSSAO()
 void Render::initializescenes()
 {
     scenes = s.scenes;
+}
+
+void Render::initializeText()
+{
+    glGenVertexArrays(1, &textVAO);
+    glGenBuffers(1, &textVBO);
+    glBindVertexArray(textVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, textVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }
 
 void Render::renderScene(Shader* shader)
@@ -217,6 +231,57 @@ void Render::renderSSAO()
     glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
     renderScene(ssaoblurshader);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Render::renderText(Font f)
+{
+    glm::vec3 color = f.getColor();
+    std::string text = f.getText();
+    float x = 0.0f;
+    float y = 0.0f;
+    float scale = 1.0f;
+
+    textshader->setVec3("textColor", color);
+
+    glBindVertexArray(textVAO);
+    glActiveTexture(GL_TEXTURE0);
+
+    auto characters = f.getCharacters();
+    for (char c : text) 
+    {
+        Character ch = characters[c];
+        if (ch.textureID == 0)
+        {
+            std::cerr << "Error: textureID for character " << c << " is not valid." << std::endl;
+        }
+        float xpos = x + ch.Bearing.x * scale;
+        float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+        float w = ch.Size.x * scale;
+        float h = ch.Size.y * scale;
+        // update VBO for each character
+        float vertices[6][4] =
+        {
+            { xpos,     ypos + h,   0.0f, 0.0f },            
+            { xpos,     ypos,       0.0f, 1.0f },
+            { xpos + w, ypos,       1.0f, 1.0f },
+
+            { xpos,     ypos + h,   0.0f, 0.0f },
+            { xpos + w, ypos,       1.0f, 1.0f },
+            { xpos + w, ypos + h,   1.0f, 0.0f }           
+        };
+        // render glyph texture over quad
+        glBindTexture(GL_TEXTURE_2D, ch.textureID);
+        // update content of VBO memory
+        glBindBuffer(GL_ARRAY_BUFFER, textVBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); 
+        //glBindBuffer(GL_ARRAY_BUFFER, 0);
+        // render quad
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+        x += (ch.Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
+    }
+    glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Render::render(GLFWwindow* window)
@@ -339,6 +404,23 @@ void Render::render(GLFWwindow* window)
     glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
     hdrshader->setInt("ssao", 1);
     glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glBindVertexArray(0);
+    textshader->use();
+    textshader->setMat4("projection", glm::ortho(0.0f, static_cast<float>(s.windoww), 0.0f, static_cast<float>(s.windowh)));
+    for (int i = 0; i < scenes.size(); i++)
+    {
+        for (int j = 0; j < scenes.at(i).getTexts().size(); j++)
+        {
+            Font letters = scenes.at(i).getTexts().at(j);
+            glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, glm::vec3(letters.getPosition().x, letters.getPosition().y, 0.0f));
+            model = glm::rotate(model, glm::radians(letters.getRotation()), glm::vec3(0.0f, 0.0f, 1.0f));
+            model = glm::scale(model, glm::vec3(letters.getScale(), letters.getScale(), 1.0f));
+            textshader->setMat4("model", model);
+            renderText(letters);
+        }
+    }
 
     //draw
     glfwSwapBuffers(window);

@@ -151,7 +151,58 @@ Scene::Scene(std::string path)
         audios.push_back(audio);
     }
     b.audiobank.insert(b.audiobank.end(), audios.begin(), audios.end());
-    std::cout << "Loaded scene with " << modelCount << " models and " << audios.size() << " audio files." << std::endl;
+    for (tinyxml2::XMLElement* textElement = root->FirstChildElement("Text"); textElement; textElement = textElement->NextSiblingElement("Text")) 
+    {
+        const char* fontPath = textElement->FirstChildElement("Font")->GetText();
+        if (!fontPath)
+        {
+            std::cerr << "No font path in XML file: " << path << std::endl;
+        }
+        Font font(fontPath);
+        glm::vec2 textPos;
+        std::string text = textElement->FirstChildElement("Data")->GetText();
+        if (text != "")
+        {
+            setText(font, text);
+        }
+        tinyxml2::XMLElement* textLocationElement = textElement->FirstChildElement("Location");
+        if (textLocationElement)
+        {
+            textLocationElement->QueryFloatAttribute("x", &textPos.x);
+            textLocationElement->QueryFloatAttribute("y", &textPos.y);
+            setTextLocation(font, textPos);
+            std::cout << "Text location: " << textPos.x << ", " << textPos.y << std::endl;
+        }
+        float textRot;
+        if (textElement->FirstChildElement("Rotation")) 
+        {
+            textElement->FirstChildElement("Rotation")->QueryFloatText(&textRot);
+            setTextRotation(font, textRot);
+            std::cout << "Text rotation: " << textRot << std::endl;
+        }
+        float textScale;
+        if (textElement->FirstChildElement("Scale")) 
+        {
+            textElement->FirstChildElement("Scale")->QueryFloatText(&textScale);
+            setTextScale(font, textScale);
+            std::cout << "Text scale: " << textScale << std::endl;
+        }
+        glm::vec3 textColor;
+        tinyxml2::XMLElement* textColorElement = textElement->FirstChildElement("Color");
+        if (textColorElement) 
+        {
+            textColorElement->QueryFloatAttribute("r", &textColor.x);
+            textColorElement->QueryFloatAttribute("g", &textColor.y);
+            textColorElement->QueryFloatAttribute("b", &textColor.z);
+            textColor = glm::vec3(textColor.x / 255.0f, textColor.y / 255.0f, textColor.z / 255.0f);
+            setTextColor(font, textColor);
+            std::cout << "Text color: " << textColor.x << ", " << textColor.y << ", " << textColor.z << std::endl;
+        }
+        texts.push_back(font);
+        std::cout << "Text object loaded." << std::endl;
+    }
+
+    std::cout << "Loaded scene with " << modelCount << " models and " << audios.size() << " audio files and " << texts.size() << " text objects." << std::endl;
 }
 
 Model Scene::getModel(int index)
@@ -230,3 +281,53 @@ void Scene::setModelScale(int index, glm::vec3 newScale)
     models[index].setScale(newScale + scale);
 }
 
+void Scene::setText(Font& f, std::string text)
+{
+    f.setText(text);
+    std::cout << "(SCENE) Text set to: " << text << std::endl;
+}
+
+void Scene::setTextLocation(Font& f, glm::vec2 newLocation)
+{
+    f.setPosition(newLocation);
+}
+
+void Scene::setTextRotation(Font& f, float newRotation)
+{
+    f.setRotation(newRotation);
+}
+
+void Scene::setTextScale(Font& f, float newScale)
+{
+    f.setScale(newScale);
+}
+
+void Scene::setTextColor(Font& f, glm::vec3 newColor)
+{
+    f.setColor(newColor);
+}
+
+std::vector<Font> Scene::getTexts()
+{
+    return texts;
+}
+
+glm::vec2 Scene::getTextLocation(int index)
+{
+    return texts[index].getPosition();
+}
+
+float Scene::getTextRotation(int index)
+{
+    return texts[index].getRotation();
+}
+
+float Scene::getTextScale(int index)
+{
+    return texts[index].getScale();
+}
+
+glm::vec3 Scene::getTextColor(int index)
+{
+    return texts[index].getColor();
+}

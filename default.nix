@@ -43,6 +43,7 @@ pkgs.stdenv.mkDerivation {
     pkgs.wayland
     pkgs.wayland-protocols
     pkgs.pkg-config
+    pkgs.freetype
   ];
   CXXFLAGS = "-g";
   patchPhase = ''
@@ -50,7 +51,7 @@ pkgs.stdenv.mkDerivation {
   buildPhase = ''
     mkdir -p $TMPDIR/build
     cd $TMPDIR/build
-    export LDFLAGS="-L${pkgs.libGL}/lib -L${pkgs.glm}/lib -L${pkgs.glfw}/lib -L${glad}/lib -L${pkgs.wayland}/lib -L${pkgs.assimp}/lib -L${pkgs.tinyxml-2}/lib"
+    export LDFLAGS="-L${pkgs.libGL}/lib -L${pkgs.glm}/lib -L${pkgs.glfw}/lib -L${glad}/lib -L${pkgs.wayland}/lib -L${pkgs.assimp}/lib -L${pkgs.tinyxml-2}/lib -L${pkgs.freetype}/lib"
     cmake -G Ninja $src
     ninja -v
     '';

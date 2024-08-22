@@ -14,6 +14,7 @@ Scene c;
 Audio a;
 Audiobank b;
 SignalEmitter e;
+Font f;
 
 int main() 
 {
@@ -25,6 +26,7 @@ int main()
         r.initializelights();
         r.initializeSSAO();
         r.initializescenes();
+        r.initializeText();
         m.running = true;
         //this code needs to be HERE and NOT in s.initialize
         std::string vertexshadersource = g.readShader("/home/mizl/Documents/MGE/assets/shaders/main.vert");

@@ -13,6 +13,7 @@
 #include "audio/audio.cpp"
 #include "audiobank/audiobank.cpp"
 #include "signalemitter/signalemitter.cpp"
+#include "font/font.cpp"
 #include "declarations.hpp"
 
 class Main 

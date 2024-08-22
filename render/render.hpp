@@ -26,10 +26,12 @@ public:
     void initializelights();
     void initializeSSAO();
     void initializescenes();
+    void initializeText();
     void renderScene(Shader* shader);
     void render(GLFWwindow* window);
     void renderShadowMap();
     void renderSSAO();
+    void renderText(Font f);
     std::vector<glm::vec3> ssaoKernel;
     std::vector<glm::vec3> ssaoNoise;
     unsigned int ssaoFBO, ssaoBlurFBO;
@@ -38,6 +40,8 @@ public:
     unsigned int noiseTexture;
     unsigned int gPosition;
     unsigned int gNormal;
+    unsigned int textVAO;
+    unsigned int textVBO;
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = glm::mat4(1.0f);
     glm::mat4 proj = glm::perspective(glm::radians(90.0f), (float)s.windoww / (float)s.windowh, 0.1f, 100.0f);
@@ -82,6 +86,7 @@ private:
     Shader* sharpenshader;
     Shader* ssaoshader;
     Shader* ssaoblurshader;
+    Shader* textshader;
 };
 
 #endif /* render_hpp */
