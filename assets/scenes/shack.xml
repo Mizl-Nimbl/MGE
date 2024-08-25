@@ -1,12 +1,41 @@
 <Scene>
-    <Location x="0.0" y="-6.0" z="0.0" />
+    <Location x="0.0" y="-10.0" z="0.0" />
     <Rotation x="0.0" y="0.0" z="0.0" />
     <Scale x="1.5" y="1.5" z="1.5" />
     <Model>
-        <Name>Window</Name>
+        <Name>Floor1</Name>
         <Path>/home/mizl/Documents/MGE/assets/models/woodfloor/woodfloor.obj</Path>
         <Location x="0.0" y="0.0" z="0.0" />
         <Rotation x="0.0" y="0.0" z="0.0" />
+        <Scale x="1.0" y="1.0" z="1.0" />
+    </Model>
+    <Model>
+        <Name>Floor2</Name>
+        <Path>/home/mizl/Documents/MGE/assets/models/woodfloor/woodfloor.obj</Path>
+        <Location x="10.0" y="0.0" z="10.0" />
+        <Rotation x="0.0" y="0.0" z="0.0" />
+        <Scale x="1.0" y="1.0" z="1.0" />
+    </Model>
+    <Model>
+        <Name>Floor3</Name>
+        <Path>/home/mizl/Documents/MGE/assets/models/woodfloor/woodfloor.obj</Path>
+        <Location x="10.0" y="0.0" z="0.0" />
+        <Rotation x="0.0" y="0.0" z="0.0" />
+        <Scale x="1.0" y="1.0" z="1.0" />
+    </Model>
+    <Model>
+        <Name>Floor4</Name>
+        <Path>/home/mizl/Documents/MGE/assets/models/woodfloor/woodfloor.obj</Path>
+        <Location x="0.0" y="0.0" z="10.0" />
+        <Rotation x="0.0" y="0.0" z="0.0" />
+        <Scale x="1.0" y="1.0" z="1.0" />
+    </Model>
+
+    <Model>
+        <Name>Window</Name>
+        <Path>/home/mizl/Documents/MGE/assets/models/window/window.obj</Path>
+        <Location x="0.0" y="0.0" z="-10.0" />
+        <Rotation x="90.0" y="0.0" z="0.0" />
         <Scale x="1.0" y="1.0" z="1.0" />
     </Model>
 </Scene>

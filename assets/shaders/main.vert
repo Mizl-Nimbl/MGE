@@ -23,7 +23,7 @@ void main()
     vec3 T = normalize(mat3(model) * aTangent);
     vec3 N = normalize(mat3(model) * aNormal);
     T = normalize(T - dot(T, N) * N);
-    vec3 B = cross(N, T);
+    vec3 B = normalize(mat3(model) * aBitangent);
     TBN = mat3(T, B, N);
     FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
 }

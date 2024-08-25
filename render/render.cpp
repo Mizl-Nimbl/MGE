@@ -17,12 +17,14 @@ Render::~Render()
 
 void Render::initializelights()
 {
-    Light bluelight(79, 50, 240, 150, glm::vec3(2.0f, 3.0f, 1.0f), 1.0f);
-    Light redlight(245, 47, 47, 150, glm::vec3(-2.0f, -3.0f, 1.0f), 1.0f);
-    Light flashlight(171, 188, 224, 100, cameraPos, cameraFront, 1.0f);
-    lights.push_back(flashlight);
-    lights.push_back(bluelight);
+    Light bluelight(79, 50, 240, 255, glm::vec3(2.0f, 3.0f, 1.0f), 1.0f);
+    Light whitelight(255, 255, 255, 255, glm::vec3(4.0f, -8.0f, 4.0f), 1.0f);
+    Light redlight(255, 0, 0, 255, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+
+    //Light flashlight(171, 188, 224, 255, cameraPos, cameraFront, 1.0f);
     lights.push_back(redlight);
+    lights.push_back(whitelight);
+    lights.push_back(bluelight);
 }
 
 void Render::initializeshaders()
@@ -38,6 +40,7 @@ void Render::initializeshaders()
     edgeshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/edgedetection.frag");
     edgehdrshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/edgehdr.frag");
     sharpenshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/sharpen.frag");
+    posterizeshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/posterize.frag");
     ssaoshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/ssao/ssao.vert", "/home/mizl/Documents/MGE/assets/shaders/ssao/ssao.frag");
     ssaoblurshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/ssao/ssao.vert", "/home/mizl/Documents/MGE/assets/shaders/ssao/blurssao.frag");
 }
@@ -344,8 +347,6 @@ void Render::render(GLFWwindow* window)
     mainshader->setInt("material.Textureimg", 0);
     mainshader->setInt("material.specular", 1);
 
-    glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
-
     //transformations
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
@@ -360,8 +361,8 @@ void Render::render(GLFWwindow* window)
     glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_2D, s.depthmapFBO);
     mainshader->setInt("shadowMap", 3);
-    lights[0].setPosition(cameraPos);
-    lights[0].setDirection(cameraFront);
+    //lights[0].setPosition(cameraPos);
+    //lights[0].setDirection(cameraFront);
     for (int i = 0; i < lights.size(); i++)
     {
         std::string index = std::to_string(i);
@@ -400,6 +401,7 @@ void Render::render(GLFWwindow* window)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, s.framebuffertex);
     hdrshader->setInt("scene", 0);
+    hdrshader->setVec2("resolution", glm::vec2(s.windoww, s.windowh));
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
     hdrshader->setInt("ssao", 1);

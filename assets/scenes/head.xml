@@ -16,6 +16,34 @@
         <Rotation x="0.0" y="0.0" z="0.0" />
         <Scale x="1.0" y="1.0" z="1.0" />
     </Model>
+    <Model>
+        <Name>Jaw</Name>
+        <Path>/home/mizl/Documents/MGE/assets/models/jaw/jaw.obj</Path>
+        <Location x="0.0" y="0.0" z="0.0" />
+        <Rotation x="0.0" y="0.0" z="0.0" />
+        <Scale x="1.0" y="1.0" z="1.0" />
+    </Model>
+    <Model>
+        <Name>Eye</Name>
+        <Path>/home/mizl/Documents/MGE/assets/models/eye/eye.obj</Path>
+        <Location x="0.42" y="0.0" z="0.0" />
+        <Rotation x="0.0" y="0.0" z="0.0" />
+        <Scale x="1.0" y="1.0" z="1.0" />
+    </Model>
+    <Model>
+        <Name>Eye</Name>
+        <Path>/home/mizl/Documents/MGE/assets/models/eye/eye.obj</Path>
+        <Location x="-0.42" y="0.0" z="0.0" />
+        <Rotation x="0.0" y="0.0" z="0.0" />
+        <Scale x="1.0" y="1.0" z="1.0" />
+    </Model>
+    <Model>
+        <Name>Skin</Name>
+        <Path>/home/mizl/Documents/MGE/assets/models/headskin/headskin.obj</Path>
+        <Location x="0.0" y="0.0" z="0.0" />
+        <Rotation x="0.0" y="0.0" z="0.0" />
+        <Scale x="1.0" y="1.0" z="1.0" />
+    </Model>
     <Audio>
         <Name>Voice</Name>
         <Path>/home/mizl/Documents/MGE/assets/audio/voiceline.mp3</Path>

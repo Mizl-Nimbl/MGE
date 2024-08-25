@@ -124,12 +124,10 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
         tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
         tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
         tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
-        tangent = glm::normalize(tangent);
 
         bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
         bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
         bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
-        bitangent = glm::normalize(bitangent);
 
         v0.tangent += tangent;
         v1.tangent += tangent;

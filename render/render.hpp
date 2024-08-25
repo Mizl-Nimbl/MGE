@@ -87,6 +87,7 @@ private:
     Shader* ssaoshader;
     Shader* ssaoblurshader;
     Shader* textshader;
+    Shader* posterizeshader;
 };
 
 #endif /* render_hpp */
