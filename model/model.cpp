@@ -2,10 +2,9 @@
 
 void Model::Draw()
 {
-    std::vector<Texture> modeltextures = textures_loaded;
     for(unsigned int i = 0; i < meshes.size(); i++)
     {
-        meshes[i].Draw(modeltextures);
+        meshes[i].Draw(textures_loaded);
     }
 } 
 
@@ -41,7 +40,7 @@ void Model::loadModel(std::string const &path)
     meshes.clear();
     textures_loaded.clear();
     Assimp::Importer importer;
-    const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals); 
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
@@ -99,9 +98,21 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
             vertex.texCoords = glm::vec2(0.0f, 0.0f);
         }
 
+        // Tangents
+        vector.x = mesh->mTangents[i].x;
+        vector.y = mesh->mTangents[i].y;
+        vector.z = mesh->mTangents[i].z;
+        vertex.tangent = vector;
+
+        // Bitangents
+        vector.x = mesh->mBitangents[i].x;
+        vector.y = mesh->mBitangents[i].y;
+        vector.z = mesh->mBitangents[i].z;
+        vertex.bitangent = vector;
+
         vertices.push_back(vertex);
     }
-
+    /*
     for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
         aiFace face = mesh->mFaces[i];
         unsigned int idx0 = face.mIndices[0];
@@ -137,12 +148,13 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
         v1.bitangent += bitangent;
         v2.bitangent += bitangent;
     }
-
+    
     // Normalize tangents and bitangents
     for (unsigned int i = 0; i < vertices.size(); i++) {
         vertices[i].tangent = glm::normalize(vertices[i].tangent);
         vertices[i].bitangent = glm::normalize(vertices[i].bitangent);
     }
+    */
 
     for(unsigned int i = 0; i < mesh->mNumFaces; i++)
     {
@@ -156,11 +168,11 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
     if(mesh->mMaterialIndex >= 0)
     {
         aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-        std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse", "diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-        std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular", "specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS, "texture_normal", "normal");
         textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
         std::cout << "Loaded " << diffuseMaps.size() << " diffuse textures and " << specularMaps.size() << " specular textures and " << normalMaps.size() << " normal maps for mesh." << std::endl;
     }
@@ -168,7 +180,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
     return Mesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, const char* typeName)
+std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, const char* typeName, const std::string& area)
 {
     std::vector<Texture> textures;
     for(unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -200,6 +212,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
         }
         texture.type = typeName;
         texture.path = fullPath;
+        texture.area = area;
         textures.push_back(texture);
         textures_loaded.push_back(texture); // add to loaded textures
     }

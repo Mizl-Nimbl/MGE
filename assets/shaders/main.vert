@@ -17,13 +17,14 @@ uniform mat4 lightSpaceMatrix;
 
 void main()
 {
+    mat3 normalMatrix = transpose(inverse(mat3(model)));
     gl_Position = proj * view * model * vec4(aPos, 1.0);
     Texture = aTexture;
     FragPos = vec3(model * vec4(aPos, 1.0));
-    vec3 T = normalize(mat3(model) * aTangent);
-    vec3 N = normalize(mat3(model) * aNormal);
+    vec3 T = normalize(normalMatrix * aTangent);
+    vec3 N = normalize(normalMatrix * aNormal);
     T = normalize(T - dot(T, N) * N);
-    vec3 B = normalize(mat3(model) * aBitangent);
+    vec3 B = normalize(normalMatrix * aBitangent);
     TBN = mat3(T, B, N);
     FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
 }

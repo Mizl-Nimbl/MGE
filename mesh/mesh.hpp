@@ -20,6 +20,8 @@ struct Vertex
     glm::vec3 normal;
     glm::vec3 tangent;
     glm::vec3 bitangent;
+    int boneIDs;
+    float boneWeights;
 };
 
 struct Texture
@@ -27,6 +29,7 @@ struct Texture
     unsigned int id;
     std::string type;
     std::string path;
+    std::string area;
 };
 
 class Mesh
