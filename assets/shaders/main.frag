@@ -29,7 +29,7 @@ in mat3 TBN;
 in vec4 FragPosLightSpace;
 
 #define lightCount 16
-#define rayCount 2
+#define rayCount 64
 #define maxReflections 6
 #define maxObjects 16
 
@@ -44,6 +44,43 @@ float hash(float n) {
 
 vec3 randomVec3(float seed) {
     return vec3(hash(seed), hash(seed + 1.0), hash(seed + 2.0));
+}
+
+vec3 randomDirectionInCone(vec3 direction, float angle, float seed)
+{
+    // Generate two random numbers
+    float u = hash(seed);
+    float v = hash(seed + 1.0);
+
+    // Convert to spherical coordinates
+    float theta = 2.0 * 3.14159265359 * u;
+    float phi = acos(2.0 * v - 1.0);
+
+    // Adjust phi to be within the cone angle
+    phi = phi * angle / 3.14159265359;
+
+    // Convert spherical coordinates to Cartesian coordinates
+    vec3 randomDir;
+    randomDir.x = sin(phi) * cos(theta);
+    randomDir.y = sin(phi) * sin(theta);
+    randomDir.z = cos(phi);
+
+    // Rotate the random direction to align with the original direction
+    vec3 axis = normalize(cross(vec3(0.0, 0.0, 1.0), direction));
+    float angleBetween = acos(dot(vec3(0.0, 0.0, 1.0), direction));
+    mat3 rotationMatrix = mat3(
+        cos(angleBetween) + axis.x * axis.x * (1.0 - cos(angleBetween)),
+        axis.x * axis.y * (1.0 - cos(angleBetween)) - axis.z * sin(angleBetween),
+        axis.x * axis.z * (1.0 - cos(angleBetween)) + axis.y * sin(angleBetween),
+        axis.y * axis.x * (1.0 - cos(angleBetween)) + axis.z * sin(angleBetween),
+        cos(angleBetween) + axis.y * axis.y * (1.0 - cos(angleBetween)),
+        axis.y * axis.z * (1.0 - cos(angleBetween)) - axis.x * sin(angleBetween),
+        axis.z * axis.x * (1.0 - cos(angleBetween)) - axis.y * sin(angleBetween),
+        axis.z * axis.y * (1.0 - cos(angleBetween)) + axis.x * sin(angleBetween),
+        cos(angleBetween) + axis.z * axis.z * (1.0 - cos(angleBetween))
+    );
+
+    return normalize(rotationMatrix * randomDir);
 }
 
 vec3 hit(vec3 ray, vec3 direction) 
@@ -176,6 +213,7 @@ vec3 rayCast(vec3 origin, vec3 direction, out vec3 hitPoint, out vec3 normal, ou
 
     vec3 noise = randomVec3(float(gl_FragCoord.x * gl_FragCoord.y));
     vec3 roughDirection = normalize(direction + (noise - vec3(0.5)) * roughness);
+    roughDirection = randomDirectionInCone(roughDirection, roughness * 2.0, float(gl_FragCoord.x * gl_FragCoord.y));
 
     vec3 reflectionColor = vec3(0.0);
     for(int i = 0; i < rayCount; i++)
@@ -231,7 +269,7 @@ vec3 TraceRayReflections(vec3 origin, vec3 direction)
 void main()
 {
     vec4 result = vec4(0.0);
-    result.rgb = TraceRayReflections(viewPos, normalize(FragPos - viewPos));
+    result.rgb += TraceRayReflections(viewPos, normalize(FragPos - viewPos));
     result.a = texture(material.diffuse[0], Texture).a;
     FragColor = vec4(result);
 }
