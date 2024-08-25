@@ -16,5 +16,6 @@ void main()
     //mapped = mix(vec3(dot(mapped, vec3(0.2126, 0.7152, 0.0722))), mapped, saturation);
 //
     //FragColor = vec4(mapped, 1.0);
+    
     FragColor = texture(screen, TexCoords);
 }
