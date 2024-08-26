@@ -2,9 +2,9 @@
 out vec4 FragColor;
 
 struct Material {
-    sampler2D diffuse[16];
-    sampler2D specular[16];
-    sampler2D normal[16];
+    sampler2D diffuse;
+    sampler2D specular;
+    sampler2D normal;
     float shininess;
 }; 
 
@@ -112,7 +112,7 @@ vec3 calculateLight(vec3 pos, vec3 dir, vec3 amb, vec3 dif, vec3 spe, float con,
     vec3 ambient = vec3(0.0);
     vec3 diffuse = vec3(0.0);
     vec3 specular = vec3(0.0);
-    vec3 diffuseColor = texture(material.diffuse[0], Texture).rgb;
+    vec3 diffuseColor = texture(material.diffuse, Texture).rgb;
     vec3 specularColor = vec3(0.5);
     vec3 norm = normal;
 
@@ -136,7 +136,7 @@ vec3 calculateLight(vec3 pos, vec3 dir, vec3 amb, vec3 dif, vec3 spe, float con,
         norm = -norm; // Flip the normal if it's facing away
     }
     vec3 reflectDir = reflect(-lightDir, norm);
-    float shininess = texture(material.specular[0], Texture).r + 1.0;
+    float shininess = texture(material.specular, Texture).r + 1.0;
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), (shininess) * 256.0);
 
     // Specular shading
@@ -180,7 +180,7 @@ vec3 rayCast(vec3 origin, vec3 direction, out vec3 hitPoint, out vec3 normal, ou
 
     for(int i = 0; i < rayCount; i++)
     {
-        vec3 tangentNormal = texture(material.normal[0], Texture).rgb * 2.0 - 1.0;
+        vec3 tangentNormal = texture(material.normal, Texture).rgb * 2.0 - 1.0;
         vec3 planeNormal = normalize(TBN * tangentNormal);
         vec3 lighthit = hit(ray, direction);
         if(lighthit != vec3(0.0))
@@ -190,7 +190,7 @@ vec3 rayCast(vec3 origin, vec3 direction, out vec3 hitPoint, out vec3 normal, ou
             {
                 closestDistance = dist;
                 closestHitPoint = lighthit;
-                //closestColor += texture(material.diffuse[0], Texture).rgb * 0.1;
+                //closestColor += texture(material.diffuse, Texture).rgb * 0.1;
                 for (int k = 0; k < lightCount; k++)
                 {
                     vec3 lightDir = normalize(light[k].position - closestHitPoint);
@@ -209,7 +209,7 @@ vec3 rayCast(vec3 origin, vec3 direction, out vec3 hitPoint, out vec3 normal, ou
     normal = planeNormal;
     hitColor = closestColor;
 
-    float roughness = texture(material.specular[0], Texture).r;
+    float roughness = texture(material.specular, Texture).r;
 
     vec3 noise = randomVec3(float(gl_FragCoord.x * gl_FragCoord.y));
     vec3 roughDirection = normalize(direction + (noise - vec3(0.5)) * roughness);
@@ -270,6 +270,6 @@ void main()
 {
     vec4 result = vec4(0.0);
     result.rgb += TraceRayReflections(viewPos, normalize(FragPos - viewPos));
-    result.a = texture(material.diffuse[0], Texture).a;
+    result.a = texture(material.diffuse, Texture).a;
     FragColor = vec4(result);
 }

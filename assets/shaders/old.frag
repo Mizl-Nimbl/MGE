@@ -2,9 +2,9 @@
 out vec4 FragColor;
 
 struct Material {
-    sampler2D diffuse[16];
-    sampler2D specular[16];
-    sampler2D normal[16];
+    sampler2D diffuse;
+    sampler2D specular;
+    sampler2D normal;
     float shininess;
 }; 
 
@@ -59,7 +59,7 @@ void main()
         float shadow;
 
         viewDir = normalize(viewPos - FragPos);
-        norm = texture(material.normal[0], Texture).rgb;
+        norm = texture(material.normal, Texture).rgb;
         norm = normalize(norm * 2.0 - 1.0); // Transform from [0,1] to [-1,1]
         norm = normalize(TBN * norm); // Transform to world space
 
@@ -78,7 +78,7 @@ void main()
 
         // ambient
         vec4 ambient = vec4(0.0);
-        vec4 ambColor = texture(material.diffuse[0], Texture).rgba;
+        vec4 ambColor = texture(material.diffuse, Texture).rgba;
         ambient += vec4(light[i].ambient, 1.0) * ambColor;
 
         
@@ -90,10 +90,10 @@ void main()
 
         vec4 diffuse = vec4(0.0);
         vec4 specular = vec4(0.0);
-        float shininess = texture(material.specular[0], Texture).r;
+        float shininess = texture(material.specular, Texture).r;
         spec = pow(max(dot(viewDir, blendedDir), 0.0), (shininess) * 7.0);
-        vec4 difColor = texture(material.diffuse[0], Texture).rgba;
-        vec4 specColor = texture(material.specular[0], Texture).rgba;
+        vec4 difColor = texture(material.diffuse, Texture).rgba;
+        vec4 specColor = texture(material.specular, Texture).rgba;
         diffuse += vec4(light[i].diffuse, 1) * diff * difColor;
         specular += vec4(light[i].specular, 1) * spec * specColor;
 
@@ -116,6 +116,6 @@ void main()
         
         result += (ambient + (1.0 - shadow) * (diffuse + specular));
     }
-    result.a = texture(material.diffuse[0], Texture).a;
+    result.a = texture(material.diffuse, Texture).a;
     FragColor = vec4(result);
 }
