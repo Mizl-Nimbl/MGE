@@ -20,8 +20,6 @@ class Input
 public:
     Input();
     void processInput(GLFWwindow* window);
-    float deltaTime;
-    float lastFrame;
 private:
     float cameraSpeed;
     GLint forward;

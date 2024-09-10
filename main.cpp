@@ -15,6 +15,7 @@ Audio a;
 Audiobank b;
 SignalEmitter e;
 Font f;
+Physics p;
 
 int main() 
 {
@@ -41,6 +42,7 @@ int main()
         }
         i.processInput(s.window);
         b.playaudiobank(b.audiobank);
+        p.ProcessPhysics(s.scenes);
         r.render(s.window);
     }
     return 0;

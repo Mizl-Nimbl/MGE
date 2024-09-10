@@ -30,7 +30,7 @@ void Render::initializelights()
 void Render::initializeshaders()
 {
     skyboxshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/skybox.vert", "/home/mizl/Documents/MGE/assets/shaders/skybox.frag");
-    mainshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/main.vert", "/home/mizl/Documents/MGE/assets/shaders/main.frag");
+    mainshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/main.vert", "/home/mizl/Documents/MGE/assets/shaders/old.frag");
     textshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/text/text.vert", "/home/mizl/Documents/MGE/assets/shaders/text/text.frag");
     depthshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/depth.vert", "/home/mizl/Documents/MGE/assets/shaders/depth.frag");
     hdrshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/hdr.frag");
@@ -289,7 +289,7 @@ void Render::renderText(Font f)
 
 void Render::render(GLFWwindow* window)
 {
-    //renderShadowMap();
+    renderShadowMap();
     glViewport(0, 0, s.windoww, s.windowh);
     //first pass
     glBindFramebuffer(GL_FRAMEBUFFER, s.FBO);

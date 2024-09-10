@@ -2,6 +2,7 @@
     <Location x="0.0" y="-10.0" z="0.0" />
     <Rotation x="0.0" y="0.0" z="0.0" />
     <Scale x="1.5" y="1.5" z="1.5" />
+    <PhysicsType>0</PhysicsType>
     <Model>
         <Name>Floor1</Name>
         <Path>/home/mizl/Documents/MGE/assets/models/woodfloor/woodfloor.obj</Path>

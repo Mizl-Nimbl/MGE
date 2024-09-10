@@ -5,6 +5,7 @@ Scene::Scene()
     location = glm::vec3(0.0f, 0.0f, 0.0f);
     rotation = glm::vec3(0.0f, 0.0f, 0.0f);
     scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    physicsType = 0;
 }
 
 Scene::Scene(glm::vec3 loc, glm::vec3 rot, glm::vec3 sca)
@@ -12,6 +13,7 @@ Scene::Scene(glm::vec3 loc, glm::vec3 rot, glm::vec3 sca)
     location = loc;
     rotation = rot;
     scale = sca;
+    physicsType = 0;
 }
 
 Scene::Scene(std::string path)
@@ -151,6 +153,10 @@ Scene::Scene(std::string path)
         audios.push_back(audio);
     }
     b.audiobank.insert(b.audiobank.end(), audios.begin(), audios.end());
+    for (tinyxml2::XMLElement* signalElement = root->FirstChildElement("PhysicsType"); signalElement; signalElement = signalElement->NextSiblingElement("PhysicsType")) 
+    {
+        signalElement->QueryIntText(&physicsType);
+    }
     for (tinyxml2::XMLElement* textElement = root->FirstChildElement("Text"); textElement; textElement = textElement->NextSiblingElement("Text")) 
     {
         const char* fontPath = textElement->FirstChildElement("Font")->GetText();
@@ -215,6 +221,11 @@ std::vector<Model> Scene::getModels()
     return models;
 }
 
+int Scene::getPhysicsType()
+{
+    return physicsType;
+}
+
 glm::vec3 Scene::getGlobalLocation()
 {
     return location;
@@ -243,6 +254,11 @@ glm::vec3 Scene::getModelRotation(int index)
 glm::vec3 Scene::getModelScale(int index)
 {
     return models[index].getScale();
+}
+
+void Scene::setPhysicsType(int newType)
+{
+    physicsType = newType;
 }
 
 void Scene::setModel(std::string const &modelpath)

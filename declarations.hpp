@@ -14,6 +14,7 @@ class Audio;
 class Audiobank;
 class SignalEmitter;
 class Font;
+class Physics;
 
 extern Systems s;
 extern Render r;
@@ -28,5 +29,6 @@ extern Audio a;
 extern Audiobank b;
 extern SignalEmitter e;
 extern Font f;
+extern Physics p;
 
 #endif /* declarations_hpp */

@@ -27,6 +27,7 @@ public:
     Model(std::string const &path)
     {
         loadModel(path);
+        makeModelBox();
     }
     void DrawModel(Model model)
     {
@@ -39,14 +40,21 @@ public:
     glm::vec3 getLocation();
     glm::vec3 getRotation();
     glm::vec3 getScale();
+    std::vector<glm::vec3> getBox();
+    Mesh getMesh(int i);
+    std::vector<Mesh> getMeshes();
 private:
     std::vector<Mesh> meshes;
     std::vector<Texture> textures_loaded;
+    std::vector<glm::vec3> modelBox;
     std::string directory;
     glm::vec3 location = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
+    bool compareVec3Min(glm::vec3 a, glm::vec3 b);
+    bool compareVec3Max(glm::vec3 a, glm::vec3 b);
     void loadModel(std::string const &path);
+    void makeModelBox();
     void processNode(aiNode *node, const aiScene *scene);
     Mesh processMesh(aiMesh *mesh, const aiScene *scene);
     std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, const char* typeName, const std::string& area);

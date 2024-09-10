@@ -14,6 +14,7 @@
 #include "audiobank/audiobank.cpp"
 #include "signalemitter/signalemitter.cpp"
 #include "font/font.cpp"
+#include "physics/physics.cpp"
 #include "declarations.hpp"
 
 class Main 

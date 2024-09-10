@@ -27,6 +27,7 @@ public:
 
     std::vector<Model> getModels();
     std::vector<Font> getTexts();
+    int getPhysicsType();
     Model getModel(int index);
     glm::vec3 getGlobalLocation();
     glm::vec3 getGlobalRotation();
@@ -40,6 +41,7 @@ public:
     glm::vec3 getTextColor(int index);
 
     void setModel(std::string const &modelpath);
+    void setPhysicsType(int newType);
     void setText(Font& f, std::string text);
     void setGlobalLocation(glm::vec3 newLocation);
     void setGlobalRotation(glm::vec3 newRotation);
@@ -55,6 +57,7 @@ private:
     std::vector<Model> models;
     std::vector<Audio*> audios;
     std::vector<Font> texts;
+    int physicsType;
     glm::vec3 location;
     glm::vec3 rotation;
     glm::vec3 scale;

@@ -2,6 +2,7 @@
     <Location x="3.0" y="-0.2" z="-1.4" />
     <Rotation x="0.0" y="0.0" z="0.0" />
     <Scale x="1.0" y="1.0" z="1.0" />
+    <PhysicsType>1</PhysicsType>
     <Model>
         <Name>Head</Name>
         <Path>/home/mizl/Documents/MGE/assets/models/human01/human01.obj</Path>
@@ -14,5 +15,13 @@
         <Path>/home/mizl/Documents/MGE/assets/audio/voiceline.mp3</Path>
         <Volume>1.0</Volume>
         <Loop>false</Loop>
+        <QueueSignal>239498912</QueueSignal>
+    </Audio>
+    <Audio>
+        <Name>Head</Name>
+        <Path>/home/mizl/Documents/MGE/assets/audio/touches_you.mp3</Path>
+        <Volume>1.0</Volume>
+        <Loop>false</Loop>
+        <QueueSignal>909377451</QueueSignal>
     </Audio>
 </Scene>

@@ -36,44 +36,48 @@ Input::Input()
 
 void Input::processInput(GLFWwindow* window)
 {
-    float currentFrame = glfwGetTime();
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame; 
     if (glfwGetKey(window, quit) == GLFW_PRESS)
     {
         glfwSetWindowShouldClose(window, true);
     }
     if (glfwGetKey(window, sprint) == GLFW_PRESS)
     {
-        cameraSpeed = 12.5f * deltaTime;
+        //cameraSpeed = 12.5f * deltaTime;
+        e.emit(70);
     }
     else
     {
-        cameraSpeed = 6.5f * deltaTime;
+        //cameraSpeed = 6.5f * deltaTime;
     }
     if (glfwGetKey(window, forward) == GLFW_PRESS)
     {
-        r.cameraPos += cameraSpeed * r.cameraFront;
+        //r.cameraPos += cameraSpeed * r.cameraFront;
+        e.emit(10);
     }
     if (glfwGetKey(window, backward) == GLFW_PRESS)
     {
-        r.cameraPos -= cameraSpeed * r.cameraFront;
+        //r.cameraPos -= cameraSpeed * r.cameraFront;
+        e.emit(20);
     }
     if (glfwGetKey(window, left) == GLFW_PRESS)
     {
-        r.cameraPos -= glm::normalize(glm::cross(r.cameraFront, r.cameraUp)) * cameraSpeed;
+        //r.cameraPos -= glm::normalize(glm::cross(r.cameraFront, r.cameraUp)) * cameraSpeed;
+        e.emit(30);
     }
     if (glfwGetKey(window, right) == GLFW_PRESS)
     {
-        r.cameraPos += glm::normalize(glm::cross(r.cameraFront, r.cameraUp)) * cameraSpeed;
+        //r.cameraPos += glm::normalize(glm::cross(r.cameraFront, r.cameraUp)) * cameraSpeed;
+        e.emit(40);
     }
     if (glfwGetKey(window, jump) == GLFW_PRESS)
     {
-        r.cameraPos += cameraSpeed * glm::vec3(0.0f, 1.0f, 0.0f);
+        //r.cameraPos += cameraSpeed * glm::vec3(0.0f, 1.0f, 0.0f);
+        e.emit(50);
     }
     if (glfwGetKey(window, crouch) == GLFW_PRESS)
     {
-        r.cameraPos -= cameraSpeed * glm::vec3(0.0f, 1.0f, 0.0f);
+        //r.cameraPos -= cameraSpeed * glm::vec3(0.0f, 1.0f, 0.0f);
+        e.emit(60);
     }
     if (glfwGetKey(window, downarrow) == GLFW_PRESS)
     {

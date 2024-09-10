@@ -218,3 +218,61 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
     }
     return textures;
 }
+
+Mesh Model::getMesh(int i)
+{
+    return meshes[i];
+}
+
+std::vector<Mesh> Model::getMeshes()
+{
+    return meshes;
+}
+
+void Model::makeModelBox()
+{
+    std::vector<glm::vec3> modelArr;
+    for (int i = 0; i < meshes.size(); i++)
+    {
+        
+        for (int j = 0; j < meshes[i].vertices.size(); j++)
+        {
+            modelArr.push_back(meshes[i].vertices[j].position);
+        }
+    }
+    glm::vec3 bottomleftback = *std::min_element(modelArr.begin(), modelArr.end(), 
+        [this](const glm::vec3& a, const glm::vec3& b) { return compareVec3Min(a, b); });
+    glm::vec3 toprightfront = *std::max_element(modelArr.begin(), modelArr.end(), 
+        [this](const glm::vec3& a, const glm::vec3& b) { return compareVec3Max(a, b); });
+    glm::vec3 bottomrightback = glm::vec3(toprightfront.x, bottomleftback.y, bottomleftback.z);
+    glm::vec3 bottomleftfront = glm::vec3(bottomleftback.x, bottomleftback.y, toprightfront.z);
+    glm::vec3 bottomrightfront = glm::vec3(toprightfront.x, bottomleftback.y, toprightfront.z);
+    glm::vec3 topleftback = glm::vec3(bottomleftback.x, toprightfront.y, bottomleftback.z);
+    glm::vec3 topleftfront = glm::vec3(bottomleftback.x, toprightfront.y, toprightfront.z);
+    glm::vec3 toprightback = glm::vec3(toprightfront.x, toprightfront.y, bottomleftback.z);
+    modelBox.push_back(bottomleftback + location);
+    modelBox.push_back(toprightfront + location);
+    modelBox.push_back(bottomrightback + location);
+    modelBox.push_back(bottomleftfront + location);
+    modelBox.push_back(bottomrightfront + location);
+    modelBox.push_back(topleftback + location);
+    modelBox.push_back(topleftfront + location);
+    modelBox.push_back(toprightback + location);
+}
+
+bool Model::compareVec3Min(glm::vec3 a, glm::vec3 b) {
+    if (a.x != b.x) return a.x < b.x;
+    if (a.y != b.y) return a.y < b.y;
+    return a.z < b.z;
+}
+
+bool Model::compareVec3Max(glm::vec3 a, glm::vec3 b) {
+    if (a.x != b.x) return a.x > b.x;
+    if (a.y != b.y) return a.y > b.y;
+    return a.z > b.z;
+}
+
+std::vector<glm::vec3> Model::getBox()
+{
+    return modelBox;
+}
