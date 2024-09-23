@@ -110,6 +110,7 @@ void Physics::Movement()
     charCrouch = false;
     charSprint = false;
     //gravety on characters if not colliding with static and rigid bodies
+    /*
     if (!charGrounded)
     {
         r.cameraPos.y -= charGravity * deltaTime;
@@ -119,4 +120,5 @@ void Physics::Movement()
         r.cameraPos.x *= charFriction * deltaTime;
         r.cameraPos.z *= charFriction * deltaTime;
     }
+    */
 }
