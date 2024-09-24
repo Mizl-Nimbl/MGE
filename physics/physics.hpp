@@ -20,9 +20,21 @@ class Physics
 public:
     Physics();
     void ProcessPhysics(std::vector<Scene> scenes);
-    void Collisions(Scene scene);
-    void Physicsmaths(Scene scene);
     void Movement();
+
+    //getters
+    glm::vec3 getObjPos(Model m);
+    glm::vec3 getObjVel(Model m);
+    glm::vec3 getObjAcc(Model m);
+
+    //setters
+    void setObjPos(Model m, glm::vec3 newPos);
+    void setObjVel(Model m, glm::vec3 newVel);
+    void setObjAcc(Model m, glm::vec3 newAcc);
+
+    //nudge values
+    void nudge(Model m, glm::vec3 nudge);
+
 private:
     float deltaTime;
     float lastFrame;
@@ -48,7 +60,7 @@ private:
     bool charRight;
     bool charGrounded;
     float rigidFriction = 0.5f;
-    float rigidGravity = 9.8f;
+    float rigidGravity = -9.8f;
 };
 
 #endif /* physics_hpp */

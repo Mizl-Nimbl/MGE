@@ -8,21 +8,44 @@ void Model::Draw()
     }
 } 
 
-void Model::setLocation(glm::vec3 newLocation) {
+void Model::setLocation(glm::vec3 newLocation) 
+{
     location = newLocation;
 }
 
-void Model::setRotation(glm::vec3 newRotation) {
+void Model::setLastLocation(glm::vec3 newLocation) 
+{
+    lastLocation = newLocation;
+}
+
+void Model::setLastVelocity(glm::vec3 newVelocity) 
+{
+    lastVelocity = newVelocity;
+}
+
+void Model::setRotation(glm::vec3 newRotation) 
+{
     rotation = newRotation;
 }
 
-void Model::setScale(glm::vec3 newScale) {
+void Model::setScale(glm::vec3 newScale) 
+{
     scale = newScale;
 }
 
 glm::vec3 Model::getLocation()
 {
     return location;
+}
+
+glm::vec3 Model::getLastLocation()
+{
+    return lastLocation;
+}
+
+glm::vec3 Model::getLastVelocity()
+{
+    return lastVelocity;
 }
 
 glm::vec3 Model::getRotation()

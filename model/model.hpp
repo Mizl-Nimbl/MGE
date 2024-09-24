@@ -35,9 +35,13 @@ public:
     }
     void Draw();
     void setLocation(glm::vec3 newLocation);
+    void setLastLocation(glm::vec3 newLocation);
+    void setLastVelocity(glm::vec3 newVelocity);
     void setRotation(glm::vec3 newRotation);
     void setScale(glm::vec3 newScale);
     glm::vec3 getLocation();
+    glm::vec3 getLastLocation();
+    glm::vec3 getLastVelocity();
     glm::vec3 getRotation();
     glm::vec3 getScale();
     std::vector<glm::vec3> getBox();
@@ -49,6 +53,8 @@ private:
     std::vector<glm::vec3> modelBox;
     std::string directory;
     glm::vec3 location = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 lastLocation = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 lastVelocity = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
     glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
     bool compareVec3Min(glm::vec3 a, glm::vec3 b);

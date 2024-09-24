@@ -2,6 +2,7 @@
 
 Physics::Physics()
 {
+    //signal connections
     e.connect(10, [this]() { charForward = true; });
     e.connect(20, [this]() { charBackward = true; });
     e.connect(30, [this]() { charLeft = true; });
@@ -16,50 +17,7 @@ void Physics::ProcessPhysics(std::vector<Scene> scenes)
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
-    for(int i = 0; i < scenes.size(); i++)
-    {
-        if(scenes[i].getPhysicsType() == 1)
-        {
-            Physicsmaths(scenes[i]);
-        }
-        Collisions(scenes[i]);
-    }
     Movement();
-}
-
-void Physics::Collisions(Scene scene)
-{
-    //collison, friction, rotation, etc
-    //for each model:
-    for (int i = 0; i < scene.getModels().size(); i++)
-    {
-        std::vector<glm::vec3> modelBox = scene.getModels()[i].getBox();
-        //check for box's collisions with charhibox
-        for (int j = 0; j < modelBox.size(); j++)
-        {
-            for (int k = 0; k < charhitbox.size(); k++)
-            {
-                if (modelBox[j].x == charhitbox[k].x && modelBox[j].z == charhitbox[k].z)
-                {
-                    if (modelBox[j].y == charhitbox[k].y)
-                    {
-                        charGrounded = true;
-                    }
-                    else
-                    {
-                        charGrounded = false;
-                    }
-                }
-            }
-        }
-        //check for box's collisions with rigidbodies
-        //check for box's collisions with staticbodies
-    }
-}
-
-void Physics::Physicsmaths(Scene scene)
-{
-    //gravety on rigidbodies
 }
 
 void Physics::Movement()
@@ -109,16 +67,57 @@ void Physics::Movement()
     charJump = false;
     charCrouch = false;
     charSprint = false;
-    //gravety on characters if not colliding with static and rigid bodies
-    /*
-    if (!charGrounded)
+}
+
+//getters
+
+glm::vec3 Physics::getObjPos(Model m)
+{
+    return m.getLocation();
+}
+
+glm::vec3 Physics::getObjVel(Model m)
+{
+    if (m.getLastLocation() != glm::vec3(0.0f))
     {
-        r.cameraPos.y -= charGravity * deltaTime;
+        m.setLastLocation(getObjPos(m));
     }
-    else if (charGrounded)
+    glm::vec3 velocity = (getObjPos(m) - m.getLastLocation()) / deltaTime;
+    m.setLastLocation(getObjPos(m));
+    return velocity;
+}
+
+glm::vec3 Physics::getObjAcc(Model m)
+{
+    if (m.getLastVelocity() == glm::vec3(0.0f))
     {
-        r.cameraPos.x *= charFriction * deltaTime;
-        r.cameraPos.z *= charFriction * deltaTime;
+        m.setLastVelocity(getObjVel(m));
     }
-    */
+    glm::vec3 acceleration = (getObjVel(m) - m.getLastVelocity()) / deltaTime;
+    m.setLastVelocity(getObjVel(m));
+    return acceleration;
+}
+
+//setters
+
+void Physics::setObjPos(Model m, glm::vec3 newPos)
+{
+    m.setLocation(newPos);
+}
+
+void Physics::setObjVel(Model m, glm::vec3 newVel)
+{
+    m.setLastVelocity(newVel);
+}
+
+void Physics::setObjAcc(Model m, glm::vec3 newAcc)
+{
+    m.setLastVelocity(newAcc);
+}
+
+//nudge values
+
+void Physics::nudge(Model m, glm::vec3 nudge)
+{
+    m.setLastVelocity(nudge + getObjVel(m));
 }
