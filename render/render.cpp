@@ -289,6 +289,7 @@ void Render::renderText(Font f)
 
 void Render::render(GLFWwindow* window)
 {
+    light[0].setPosition(cameraPos);
     renderShadowMap();
     glViewport(0, 0, s.windoww, s.windowh);
     //first pass

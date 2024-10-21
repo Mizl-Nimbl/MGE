@@ -40,6 +40,6 @@ void main()
         occlusion += (sampleDepth >= sample.z + bias ? 1.0 : 0.0) * rangeCheck;
     }
     occlusion = 1.0 - (occlusion / 64.0);
-    //FragColor = occlusion;
-    FragColor = vec4(1.0);
+    FragColor = occlusion;
+    //FragColor = vec4(1.0);
 }
