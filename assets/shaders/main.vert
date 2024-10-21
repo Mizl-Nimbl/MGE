@@ -26,5 +26,5 @@ void main()
     T = normalize(T - dot(T, N) * N);
     vec3 B = normalize(normalMatrix * aBitangent);
     TBN = mat3(T, B, N);
-    FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);
+    FragPosLightSpace = vec4(aPos, 1.0);
 }

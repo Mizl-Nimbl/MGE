@@ -1,10 +1,12 @@
 #version 330 core
 layout (location = 0) in vec3 aPos;
 
+out vec4 Pos;
+
 uniform mat4 lightSpaceMatrix;
 uniform mat4 model;
 
 void main()
 {
-    gl_Position = lightSpaceMatrix * model * vec4(aPos, 1.0);
+    Pos = lightSpaceMatrix * model * vec4(aPos, 1.0);
 }

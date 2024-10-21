@@ -30,7 +30,7 @@ void Render::initializelights()
 void Render::initializeshaders()
 {
     skyboxshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/skybox.vert", "/home/mizl/Documents/MGE/assets/shaders/skybox.frag");
-    mainshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/main.vert", "/home/mizl/Documents/MGE/assets/shaders/old.frag");
+    mainshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/main.vert", "/home/mizl/Documents/MGE/assets/shaders/shadowlighting.frag");
     textshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/text/text.vert", "/home/mizl/Documents/MGE/assets/shaders/text/text.frag");
     depthshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/depth.vert", "/home/mizl/Documents/MGE/assets/shaders/depth.frag");
     hdrshader = new Shader("/home/mizl/Documents/MGE/assets/shaders/postprocessing/fb.vert", "/home/mizl/Documents/MGE/assets/shaders/postprocessing/hdr.frag");
@@ -165,7 +165,7 @@ void Render::renderShadowMap()
         {
             glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
             glm::mat4 lightView = glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + lights[i].getDirection(), glm::vec3(0.0f, 1.0f, 0.0f));
-            glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+            lightSpaceMatrix = lightProjection * lightView;
             depthshader->use();
             depthshader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
 
@@ -289,6 +289,7 @@ void Render::renderText(Font f)
 
 void Render::render(GLFWwindow* window)
 {
+    lights[0].setPosition(cameraPos);
     renderShadowMap();
     glViewport(0, 0, s.windoww, s.windowh);
     //first pass
