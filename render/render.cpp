@@ -289,7 +289,6 @@ void Render::renderText(Font f)
 
 void Render::render(GLFWwindow* window)
 {
-    lights[0].setPosition(cameraPos);
     renderShadowMap();
     glViewport(0, 0, s.windoww, s.windowh);
     //first pass
@@ -345,16 +344,15 @@ void Render::render(GLFWwindow* window)
     //use shaders
     mainshader->use();
     mainshader->setMat4("proj", proj);
-    mainshader->setInt("material.Textureimg", 0);
+    mainshader->setInt("material.diffuse", 0);
     mainshader->setInt("material.specular", 1);
+    mainshader->setInt("material.normal", 2);
 
     //transformations
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
     mainshader->setMat4("view", view);
     mainshader->setVec3("viewPos", cameraPos);
-
-    mainshader->setVec3("material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
     mainshader->setFloat("material.shininess", 32.0f);
 
     //lights starting here

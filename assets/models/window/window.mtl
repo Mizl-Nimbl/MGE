@@ -9,4 +9,4 @@ Ni 1.500000
 illum 2
 map_Kd diffuse.png
 map_Ks specular.png
-map_d diffuse.png
+map_Kn diffuse.png

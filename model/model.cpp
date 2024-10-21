@@ -220,7 +220,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
         }
 
         // if texture hasn't been loaded already, load it
-        std::string fullPath = std::string(directory) + '/' + str.C_Str();
+        std::string fullPath = std::string(directory) + '/' + area + ".png";
         std::cout << "Loading texture from path: " << fullPath << std::endl;
         // Check if the file exists before calling initTexture
         std::ifstream file(fullPath);

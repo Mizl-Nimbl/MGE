@@ -38,13 +38,12 @@ void main()
 {
     vec3 projCoords = FragPosLightSpace.xyz / FragPosLightSpace.w;
     projCoords = projCoords * 0.5 + 0.5;
-    float closestDepth = texture(shadowMap, projCoords.xy).r * 25.0;
+    float closestDepth = texture(shadowMap, projCoords.xy).w * 100.0;
     float currentDepth = length(FragPos.xyz - FragPosLightSpace.xyz);
     float shadow = currentDepth + 0.001 > closestDepth ? 1.0 : 0.0;
     vec4 result = vec4(0.0);
     for(int i = 0; i < lightCount; i++)
     {
-        
         float theta;
         float epsilon;
         float intensity;
@@ -56,7 +55,6 @@ void main()
         vec3 norm;
         float diff;
         float spec;
-        float shadow;
 
         viewDir = normalize(viewPos - FragPos);
         norm = texture(material.normal, Texture).rgb;
@@ -115,6 +113,7 @@ void main()
         }
         
         result += (ambient + (1.0 - shadow) * (diffuse + specular));
+        //result += (ambient + (1.0 - shadow) * (diffuse + specular));
     }
     result.a = texture(material.diffuse, Texture).a;
     FragColor = vec4(result);

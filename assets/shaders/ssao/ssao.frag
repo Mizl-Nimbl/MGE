@@ -7,7 +7,7 @@ uniform sampler2D gPosition;
 uniform sampler2D gNormal;
 uniform sampler2D texNoise;
 
-uniform vec3 samples[64];
+uniform vec3 samples[8];
 uniform mat4 projection;
 const float noiseScale = 4.0;
 
@@ -40,5 +40,6 @@ void main()
         occlusion += (sampleDepth >= sample.z + bias ? 1.0 : 0.0) * rangeCheck;
     }
     occlusion = 1.0 - (occlusion / 64.0);
-    FragColor = occlusion;
+    //FragColor = occlusion;
+    FragColor = vec4(1.0);
 }
