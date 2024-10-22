@@ -107,10 +107,12 @@ void main()
         // attenuation apply
         if (light[i].type == 1 || light[i].type == 2)
         {
-            ambient  *= attenuation;
-            diffuse  *= attenuation;
-            specular *= attenuation;
+            ambient  *= (attenuation * 2.0);
+            diffuse  *= (attenuation * 2.0);
+            specular *= (attenuation * 2.0);
         }
+
+        ambient *= 0.1;
         
         result += (ambient + (diffuse + specular));
         //result += (ambient + (1.0 - shadow) * (diffuse + specular));

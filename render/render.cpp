@@ -17,14 +17,14 @@ Render::~Render()
 
 void Render::initializelights()
 {
-    Light warmlight(255, 209, 163, 255, glm::vec3(2.0f, 3.0f, 1.0f), 1.0f);
-    //Light whitelight(255, 249, 253, 255, glm::vec3(4.0f, -8.0f, 4.0f), 1.0f);
-    Light coollight(227, 233, 255, 255, glm::vec3(0.0f, 0.0f, 0.0f), 1.0f);
+    Light warmlight(255, 209, 163, 255, glm::vec3(2.0f, 3.0f, 1.0f), 3.0f);
+    Light whitelight(255, 249, 253, 255, glm::vec3(4.0f, -8.0f, 4.0f), 3.0f);
+    Light bluelight(255, 0, 255, 255, glm::vec3(0.0f, 0.0f, 0.0f), 2.0f);
 
     //Light flashlight(171, 188, 224, 255, cameraPos, cameraFront, 1.0f);
     lights.push_back(warmlight);
-    //lights.push_back(whitelight);
-    lights.push_back(coollight);
+    lights.push_back(whitelight);
+    lights.push_back(bluelight);
 }
 
 void Render::initializeshaders()

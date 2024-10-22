@@ -5,7 +5,7 @@ Light::Light(){}
 Light::Light(int re, int gr, int bl, int al, glm::vec3 adirection)
 {
     type = 0;
-    bright = (al / 255.0f);
+    bright = (al / 100.0f);
     bright += 1.0f;
     bright *= 2.0f;
     red    = (re / 255.0f) * bright;
@@ -16,7 +16,7 @@ Light::Light(int re, int gr, int bl, int al, glm::vec3 adirection)
 Light::Light(int re, int gr, int bl, int al, glm::vec3 aposition, float attentuation)
 {
     type = 1;
-    bright = (al / 255.0f);
+    bright = (al / 100.0f);
     bright += 1.0f;
     bright *= 2.0f;
     red    = (re / 255.0f) * bright;
@@ -31,7 +31,7 @@ Light::Light(int re, int gr, int bl, int al, glm::vec3 aposition, float attentua
 Light::Light(int re, int gr, int bl, int al, glm::vec3 aposition, glm::vec3 adirection, float attenuation)
 {
     type = 2;
-    bright = (al / 255.0f);
+    bright = (al / 100.0f);
     bright += 1.0f;
     bright *= 2.0f;
     red    = (re / 255.0f) * bright;
