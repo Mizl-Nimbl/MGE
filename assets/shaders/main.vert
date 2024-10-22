@@ -21,10 +21,9 @@ void main()
     gl_Position = proj * view * model * vec4(aPos, 1.0);
     Texture = aTexture;
     FragPos = vec3(model * vec4(aPos, 1.0));
-    vec3 T = normalize(normalMatrix * aTangent);
-    vec3 N = normalize(normalMatrix * aNormal);
-    T = normalize(T - dot(T, N) * N);
-    vec3 B = normalize(normalMatrix * aBitangent);
-    TBN = mat3(T, B, N);
-    FragPosLightSpace = lightSpaceMatrix * model * vec4(aPos, 1.0);
+    vec3 T = normalize(vec3(model * vec4(aTangent,   0.0)));
+    vec3 B = normalize(vec3(model * vec4(aBitangent, 0.0)));
+    vec3 N = normalize(vec3(model * vec4(aNormal,    0.0)));
+    mat3 TBN = mat3(T, B, N);
+    FragPosLightSpace = model * vec4(aPos, 1.0);
 }

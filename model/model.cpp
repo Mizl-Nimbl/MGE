@@ -173,11 +173,11 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
     }
     
     // Normalize tangents and bitangents
+    */
     for (unsigned int i = 0; i < vertices.size(); i++) {
         vertices[i].tangent = glm::normalize(vertices[i].tangent);
         vertices[i].bitangent = glm::normalize(vertices[i].bitangent);
     }
-    */
 
     for(unsigned int i = 0; i < mesh->mNumFaces; i++)
     {
