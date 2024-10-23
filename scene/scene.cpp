@@ -99,9 +99,9 @@ Scene::Scene(std::string path)
         modelCount++;
     }
 
-    for (tinyxml2::XMLElement* audioElement = root->FirstChildElement("Audio"); audioElement; audioElement = audioElement->NextSiblingElement("Audio")) 
+    for (tinyxml2::XMLElement* lightElement = root->FirstChildElement("Audio"); lightElement; lightElement = lightElement->NextSiblingElement("Audio")) 
     {
-        const char* audioPath = audioElement->FirstChildElement("Path")->GetText();
+        const char* audioPath = lightElement->FirstChildElement("Path")->GetText();
         if (!audioPath)
         {
             std::cerr << "No audio path in XML file: " << path << std::endl;
@@ -109,28 +109,28 @@ Scene::Scene(std::string path)
         Audio* audio = new Audio(audioPath);
 
         float vol;
-        tinyxml2::XMLElement* audioVolumeElement = audioElement->FirstChildElement("Volume");
+        tinyxml2::XMLElement* audioVolumeElement = lightElement->FirstChildElement("Volume");
         if (audioVolumeElement) 
         {
             audioVolumeElement->QueryFloatText(&vol);
             audio->setvolume(vol);
         }
         int qsig;
-        tinyxml2::XMLElement* audioQueueSignalElement = audioElement->FirstChildElement("QueueSignal");
+        tinyxml2::XMLElement* audioQueueSignalElement = lightElement->FirstChildElement("QueueSignal");
         if (audioQueueSignalElement) 
         {
             audioQueueSignalElement->QueryIntText(&qsig);
             audio->setqueuesignal(qsig);
         }
         bool loop;
-        tinyxml2::XMLElement* audioLoopElement = audioElement->FirstChildElement("Loop");
+        tinyxml2::XMLElement* audioLoopElement = lightElement->FirstChildElement("Loop");
         if (audioLoopElement) 
         {
             audioLoopElement->QueryBoolText(&loop);
             audio->setloop(loop);
         }
         glm::vec3 pos;
-        tinyxml2::XMLElement* audioPositionElement = audioElement->FirstChildElement("Position");
+        tinyxml2::XMLElement* audioPositionElement = lightElement->FirstChildElement("Position");
         if (audioPositionElement) 
         {
             audioPositionElement->QueryFloatAttribute("x", &pos.x);
@@ -139,7 +139,7 @@ Scene::Scene(std::string path)
             audio->set3dposition(pos.x, pos.y, pos.z);
         }
         glm::vec3 vel;
-        tinyxml2::XMLElement* audioVelocityElement = audioElement->FirstChildElement("Velocity");
+        tinyxml2::XMLElement* audioVelocityElement = lightElement->FirstChildElement("Velocity");
         if (audioVelocityElement) 
         {
             audioVelocityElement->QueryFloatAttribute("x", &vel.x);
@@ -208,7 +208,78 @@ Scene::Scene(std::string path)
         std::cout << "Text object loaded." << std::endl;
     }
 
-    std::cout << "Loaded scene with " << modelCount << " models and " << audios.size() << " audio files and " << texts.size() << " text objects." << std::endl;
+    for (tinyxml2::XMLElement* lightElement = root->FirstChildElement("Light"); lightElement; lightElement = lightElement->NextSiblingElement("Light")) 
+    {
+        int red; 
+        int green;
+        int blue;
+        int alpha;
+        glm::vec3 position;
+        glm::vec3 direction;
+        float attenuation;
+        tinyxml2::XMLElement* lightPositionElement = lightElement->FirstChildElement("Location");
+        glm::vec3 pos;
+        if (lightPositionElement) 
+        {
+            lightPositionElement->QueryFloatAttribute("x", &pos.x);
+            lightPositionElement->QueryFloatAttribute("y", &pos.y);
+            lightPositionElement->QueryFloatAttribute("z", &pos.z);
+            position = pos;
+        }
+        glm::vec3 dir;
+        tinyxml2::XMLElement* lightDirectionElement = lightElement->FirstChildElement("Direction");
+        if (lightDirectionElement) 
+        {
+            lightDirectionElement->QueryFloatAttribute("x", &dir.x);
+            lightDirectionElement->QueryFloatAttribute("y", &dir.y);
+            lightDirectionElement->QueryFloatAttribute("z", &dir.z);
+            direction = dir;
+        }
+        glm::vec4 col;
+        tinyxml2::XMLElement* lightColorElement = lightElement->FirstChildElement("Color");
+        if (lightColorElement) 
+        {
+            lightColorElement->QueryFloatAttribute("r", &col.x);
+            lightColorElement->QueryFloatAttribute("g", &col.y);
+            lightColorElement->QueryFloatAttribute("b", &col.z);
+            lightColorElement->QueryFloatAttribute("a", &col.w);
+            red = col.x;
+            green = col.y;
+            blue = col.z;
+            alpha = col.w;
+        }
+        int type;
+        tinyxml2::XMLElement* lightTypeElement = lightElement->FirstChildElement("Type");
+        if (lightTypeElement) 
+        {
+            lightTypeElement->QueryIntText(&type);
+        }
+        float att;
+        tinyxml2::XMLElement* lightAttenElement = lightElement->FirstChildElement("AttenuationMod");
+        if (lightAttenElement) 
+        {
+            lightAttenElement->QueryFloatText(&att);
+            attenuation = att;
+        }
+        if (type = 0)
+        {
+            Light light(red, green, blue, alpha, dir);
+            lights.push_back(light);
+        }
+        if (type = 1)
+        {
+            Light light(red, green, blue, alpha, pos, attenuation);
+            lights.push_back(light);
+        }
+        if (type = 2)
+        {
+            Light light(red, green, blue, alpha, pos, dir, attenuation);
+            lights.push_back(light);
+        }
+        std::cout << "Light object loaded." << std::endl;
+    }
+
+    std::cout << "Loaded scene with " << modelCount << " models and " << audios.size() << " audio files and " << texts.size() << " text objects and " << lights.size() << " lights." << std::endl;
 }
 
 Model Scene::getModel(int index)
@@ -219,6 +290,11 @@ Model Scene::getModel(int index)
 std::vector<Model> Scene::getModels()
 {
     return models;
+}
+
+std::vector<Light> Scene::getLights()
+{
+    return lights;
 }
 
 int Scene::getPhysicsType()
@@ -254,6 +330,31 @@ glm::vec3 Scene::getModelRotation(int index)
 glm::vec3 Scene::getModelScale(int index)
 {
     return models[index].getScale();
+}
+
+Light Scene::getLight(int index)
+{
+    return lights[index];
+}
+
+glm::vec3 Scene::getLightLocation(int index)
+{
+    return lights[index].getPosition();
+}
+
+glm::vec3 Scene::getLightDirection(int index)
+{
+    return lights[index].getDirection();
+}
+
+glm::vec4 Scene::getLightColor(int index)
+{
+    return glm::vec4(lights[index].getRed(), lights[index].getGreen(), lights[index].getBlue(), lights[index].getAlpha());
+}
+
+int Scene::getLightType(int index)
+{
+    return lights[index].getType();
 }
 
 void Scene::setPhysicsType(int newType)
@@ -346,4 +447,27 @@ float Scene::getTextScale(int index)
 glm::vec3 Scene::getTextColor(int index)
 {
     return texts[index].getColor();
+}
+
+void Scene::setLightLocation(int index, glm::vec3 newLocation)
+{
+    lights[index].setPosition(newLocation);
+}
+
+void Scene::setLightDirection(int index, glm::vec3 newRotation)
+{
+    lights[index].setDirection(newRotation);
+}
+
+void Scene::setLightColor(int index, glm::vec4 newColor)
+{
+    lights[index].setRed(newColor.r);
+    lights[index].setGreen(newColor.g);
+    lights[index].setBlue(newColor.b);
+    lights[index].setAlpha(newColor.a);
+}
+
+void Scene::setLightType(int index, int type)
+{
+    lights[index].setType(type);
 }

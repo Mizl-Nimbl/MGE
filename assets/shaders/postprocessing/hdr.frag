@@ -8,8 +8,8 @@ uniform sampler2D ssao;
 
 void main()
 {
-    const float gamma = 1.5;
-    const float saturation = 2.0;
+    const float gamma = 1.0;
+    const float saturation = 1.6;
     vec3 hdrColor = texture(screen, TexCoords).rgb;
   
     // Reinhard tone mapping
@@ -22,7 +22,7 @@ void main()
     // Adjust saturation
     mapped = mix(gray, mapped, saturation);
     
-    // Gamma correction 
+    // Gamma correction
     mapped = pow(mapped, vec3(1.0 / gamma));
   
     FragColor = vec4(mapped, 1.0);

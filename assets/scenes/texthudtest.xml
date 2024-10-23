@@ -1,17 +1,17 @@
 <Scene>
-    <!--
+    <GameState>Menu</GameState>
     <Text>
         <Data>Helminth</Data>
         <Font>/home/mizl/Documents/MGE/assets/fonts/gamefont01.ttf</Font>
-        <Location x="700" y="900"/>
+        <Location x="780" y="900"/>
         <Rotation>0</Rotation>
         <Scale>2.0</Scale>
         <Color r="255" g="0" b="0" />
     </Text>
     <Text>
-        <Data>Start Game</Data>
+        <Data>New Game</Data>
         <Font>/home/mizl/Documents/MGE/assets/fonts/gamefont01.ttf</Font>
-        <Location x="780" y="600"/>
+        <Location x="800" y="600"/>
         <Rotation>0</Rotation>
         <Scale>1.2</Scale>
         <Color r="255" g="58" b="0" />
@@ -19,7 +19,7 @@
     <Text>
         <Data>Load Game</Data>
         <Font>/home/mizl/Documents/MGE/assets/fonts/gamefont01.ttf</Font>
-        <Location x="780" y="500"/>
+        <Location x="800" y="500"/>
         <Rotation>0</Rotation>
         <Scale>1.2</Scale>
         <Color r="255" g="84" b="0" />
@@ -27,7 +27,7 @@
     <Text>
         <Data>Options</Data>
         <Font>/home/mizl/Documents/MGE/assets/fonts/gamefont01.ttf</Font>
-        <Location x="780" y="400"/>
+        <Location x="800" y="400"/>
         <Rotation>0</Rotation>
         <Scale>1.2</Scale>
         <Color r="255" g="104" b="0" />
@@ -35,10 +35,9 @@
     <Text>
         <Data>Exit Game</Data>
         <Font>/home/mizl/Documents/MGE/assets/fonts/gamefont01.ttf</Font>
-        <Location x="780" y="300"/>
+        <Location x="800" y="300"/>
         <Rotation>0</Rotation>
         <Scale>1.2</Scale>
         <Color r="255" g="122" b="0" />
     </Text>
-    -->
 </Scene>

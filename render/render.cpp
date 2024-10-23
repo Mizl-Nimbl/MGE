@@ -15,17 +15,19 @@ Render::~Render()
     delete sharpenshader;
 }
 
-void Render::initializelights()
+/*
+void Render::initializelights() //move
 {
     Light warmlight(255, 209, 163, 255, glm::vec3(2.0f, 3.0f, 1.0f), 3.0f);
     Light whitelight(255, 249, 253, 255, glm::vec3(4.0f, -8.0f, 4.0f), 3.0f);
-    Light bluelight(255, 0, 255, 255, glm::vec3(0.0f, 0.0f, 0.0f), 2.0f);
+    Light bluelight(255, 255, 255, 255, glm::vec3(0.0f, 0.0f, 0.0f), 2.0f);
 
     //Light flashlight(171, 188, 224, 255, cameraPos, cameraFront, 1.0f);
     lights.push_back(warmlight);
     lights.push_back(whitelight);
     lights.push_back(bluelight);
 }
+*/
 
 void Render::initializeshaders()
 {
@@ -156,15 +158,16 @@ void Render::renderScene(Shader* shader)
     }
 }
 
+/*
 void Render::renderShadowMap()
 {
     for (int i = 0; i < lights.size(); i++)
     {
         glCullFace(GL_FRONT);
-        if (lights[i].getType() == 0 || lights[i].getType() == 2)
+        if (scenes[j].getLight(i).getType() == 0 || scenes[j].getLight(i).getType() == 2)
         {
             glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
-            glm::mat4 lightView = glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + lights[i].getDirection(), glm::vec3(0.0f, 1.0f, 0.0f));
+            glm::mat4 lightView = glm::lookAt(scenes[j].getLight(i).getPosition(), scenes[j].getLight(i).getPosition() + scenes[j].getLight(i).getDirection(), glm::vec3(0.0f, 1.0f, 0.0f));
             lightSpaceMatrix = lightProjection * lightView;
             depthshader->use();
             depthshader->setMat4("lightSpaceMatrix", lightSpaceMatrix);
@@ -175,18 +178,18 @@ void Render::renderShadowMap()
 
             renderScene(depthshader);
         }
-        else if (lights[i].getType() == 1)
+        else if (scenes[j].getLight(i).getType() == 1)
         {
             float aspect = (float)s.SHADOW_WIDTH / (float)s.SHADOW_HEIGHT;
             glm::mat4 shadowProj = glm::perspective(glm::radians(90.0f), aspect, 0.1f, 100.0f);
 
             std::vector<glm::mat4> shadowTransforms;
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + glm::vec3( 1.0,  0.0,  0.0), glm::vec3(0.0, -1.0,  0.0)));
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + glm::vec3(-1.0,  0.0,  0.0), glm::vec3(0.0, -1.0,  0.0)));
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + glm::vec3( 0.0,  1.0,  0.0), glm::vec3(0.0,  0.0,  1.0)));
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + glm::vec3( 0.0, -1.0,  0.0), glm::vec3(0.0,  0.0, -1.0)));
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + glm::vec3( 0.0,  0.0,  1.0), glm::vec3(0.0, -1.0,  0.0)));
-            shadowTransforms.push_back(shadowProj * glm::lookAt(lights[i].getPosition(), lights[i].getPosition() + glm::vec3( 0.0,  0.0, -1.0), glm::vec3(0.0, -1.0,  0.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(scenes[j].getLight(i).getPosition(), scenes[j].getLight(i).getPosition() + glm::vec3( 1.0,  0.0,  0.0), glm::vec3(0.0, -1.0,  0.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(scenes[j].getLight(i).getPosition(), scenes[j].getLight(i).getPosition() + glm::vec3(-1.0,  0.0,  0.0), glm::vec3(0.0, -1.0,  0.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(scenes[j].getLight(i).getPosition(), scenes[j].getLight(i).getPosition() + glm::vec3( 0.0,  1.0,  0.0), glm::vec3(0.0,  0.0,  1.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(scenes[j].getLight(i).getPosition(), scenes[j].getLight(i).getPosition() + glm::vec3( 0.0, -1.0,  0.0), glm::vec3(0.0,  0.0, -1.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(scenes[j].getLight(i).getPosition(), scenes[j].getLight(i).getPosition() + glm::vec3( 0.0,  0.0,  1.0), glm::vec3(0.0, -1.0,  0.0)));
+            shadowTransforms.push_back(shadowProj * glm::lookAt(scenes[j].getLight(i).getPosition(), scenes[j].getLight(i).getPosition() + glm::vec3( 0.0,  0.0, -1.0), glm::vec3(0.0, -1.0,  0.0)));
 
             depthshader->use();
             for (unsigned int i = 0; i < 6; ++i)
@@ -194,7 +197,7 @@ void Render::renderShadowMap()
                 depthshader->setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
             }
             depthshader->setFloat("far_plane", 100.0f);
-            depthshader->setVec3("lightPos", lights[i].getPosition());
+            depthshader->setVec3("lightPos", scenes[j].getLight(i).getPosition());
 
             glViewport(0, 0, s.SHADOW_WIDTH, s.SHADOW_HEIGHT);
             glBindFramebuffer(GL_FRAMEBUFFER, s.depthmapFBO);
@@ -206,6 +209,7 @@ void Render::renderShadowMap()
         glCullFace(GL_BACK);
     }
 }
+*/
 
 void Render::renderSSAO()
 {
@@ -289,7 +293,7 @@ void Render::renderText(Font f)
 
 void Render::render(GLFWwindow* window)
 {
-    lights[0].setPosition(cameraPos);
+    //scenes[0].setLightPosition(0, cameraPos);
     //renderShadowMap();
     glViewport(0, 0, s.windoww, s.windowh);
     //first pass
@@ -363,20 +367,23 @@ void Render::render(GLFWwindow* window)
     mainshader->setInt("shadowMap", 3);
     //lights[0].setPosition(cameraPos);
     //lights[0].setDirection(cameraFront);
-    for (int i = 0; i < lights.size(); i++)
+    for (int j = 0; j < scenes.size(); j++)
     {
-        std::string index = std::to_string(i);
-        mainshader->setInt("light[" + index + "].type", lights[i].getType());
-        mainshader->setVec3("light[" + index + "].position", lights[i].getPosition());
-        mainshader->setVec3("light[" + index + "].direction", lights[i].getDirection());
-        mainshader->setVec3("light[" + index + "].ambient", glm::vec3(lights[i].getRed() * 0.025f , lights[i].getGreen() * 0.025f, lights[i].getBlue() * 0.025f));
-        mainshader->setVec3("light[" + index + "].diffuse", glm::vec3(lights[i].getRed(), lights[i].getGreen(), lights[i].getBlue()));
-        mainshader->setVec3("light[" + index + "].specular", glm::vec3(lights[i].getRed(), lights[i].getGreen(), lights[i].getBlue()));
-        mainshader->setFloat("light[" + index + "].cutOff", lights[i].getCutOff());
-        mainshader->setFloat("light[" + index + "].outerCutOff", lights[i].getOuterCutOff());
-        mainshader->setFloat("light[" + index + "].constant", lights[i].getConstant());
-        mainshader->setFloat("light[" + index + "].linear", lights[i].getLinear());
-        mainshader->setFloat("light[" + index + "].quadratic", lights[i].getQuadratic());
+        for (int i = 0; i < scenes[j].getLights().size(); i++)
+        {
+            std::string index = std::to_string(i);
+            mainshader->setInt("light[" + index + "].type", scenes[j].getLight(i).getType());
+            mainshader->setVec3("light[" + index + "].position", scenes[j].getLight(i).getPosition());
+            mainshader->setVec3("light[" + index + "].direction", scenes[j].getLight(i).getDirection());
+            mainshader->setVec3("light[" + index + "].ambient", glm::vec3(scenes[j].getLight(i).getRed() * 0.025f , scenes[j].getLight(i).getGreen() * 0.025f, scenes[j].getLight(i).getBlue() * 0.025f));
+            mainshader->setVec3("light[" + index + "].diffuse", glm::vec3(scenes[j].getLight(i).getRed(), scenes[j].getLight(i).getGreen(), scenes[j].getLight(i).getBlue()));
+            mainshader->setVec3("light[" + index + "].specular", glm::vec3(scenes[j].getLight(i).getRed(), scenes[j].getLight(i).getGreen(), scenes[j].getLight(i).getBlue()));
+            mainshader->setFloat("light[" + index + "].cutOff", scenes[j].getLight(i).getCutOff());
+            mainshader->setFloat("light[" + index + "].outerCutOff", scenes[j].getLight(i).getOuterCutOff());
+            mainshader->setFloat("light[" + index + "].constant", scenes[j].getLight(i).getConstant());
+            mainshader->setFloat("light[" + index + "].linear", scenes[j].getLight(i).getLinear());
+            mainshader->setFloat("light[" + index + "].quadratic", scenes[j].getLight(i).getQuadratic());
+        }
     }
     //lights ending here
 

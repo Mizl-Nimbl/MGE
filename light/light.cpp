@@ -2,6 +2,15 @@
 
 Light::Light(){}
 
+Light::Light(int re, int gr, int bl, int al)
+{
+    type = 0;
+    bright = 0.0f;
+    red = 0.0f;
+    green = 0.0f;
+    blue = 0.0f;
+}
+
 Light::Light(int re, int gr, int bl, int al, glm::vec3 adirection)
 {
     type = 0;
@@ -99,6 +108,11 @@ void Light::setGreen(int gr)
 void Light::setBlue(int bl)
 {
     blue = (bl / 255.0f) * bright;
+}
+
+void Light::setType(int t)
+{
+    type = t;
 }
 
 glm::vec3 Light::getDirection()

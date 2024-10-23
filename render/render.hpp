@@ -23,7 +23,6 @@ public:
     ~Render();
     void initializeshaders();
     void initializeskybox();
-    void initializelights();
     void initializeSSAO();
     void initializescenes();
     void initializeText();
@@ -54,8 +53,6 @@ public:
     glm::vec3 cameraRight;
     glm::vec3 cameraUp;
     glm::vec3 cameraFront;
-
-    std::vector <Light> lights;
 
     std::vector <Scene> scenes;
 

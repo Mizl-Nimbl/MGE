@@ -24,7 +24,7 @@ int main()
     {
         r.initializeshaders();
         r.initializeskybox();
-        r.initializelights();
+        //r.initializelights();
         r.initializeSSAO();
         r.initializescenes();
         r.initializeText();

@@ -53,10 +53,10 @@ void Mesh::setupMesh()
 void Mesh::Draw(std::vector<Texture> meshtextures)
 {
     textures = meshtextures;
-    unsigned int diffuseNr = 1;
-    unsigned int specularNr = 1;
-    unsigned int normalNr = 1;
-    for(unsigned int i = 0; i < textures.size(); i++)
+    unsigned int diffuseNr = 0;
+    unsigned int specularNr = 0;
+    unsigned int normalNr = 0;
+    for(unsigned int i = 0; i < 3; i++)
     {
         glActiveTexture(GL_TEXTURE0 + i);
 

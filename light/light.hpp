@@ -17,6 +17,7 @@ class Light
 {
 public:
     Light();
+    Light(int re, int gr, int bl, int al);
     Light(int re, int gr, int bl, int al, glm::vec3 adirection);
     Light(int re, int gr, int bl, int al, glm::vec3 aposition, float attenuation);
     Light(int re, int gr, int bl, int al, glm::vec3 aposition, glm::vec3 adirection, float attenuation);
@@ -32,6 +33,7 @@ public:
     void setRed(int re);
     void setGreen(int gr);
     void setBlue(int bl);
+    void setType(int t);
 
     glm::vec3 getDirection();
     glm::vec3 getPosition();

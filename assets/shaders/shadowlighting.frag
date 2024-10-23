@@ -60,6 +60,8 @@ void main()
         norm = texture(material.normal, Texture).rgb;
         norm = normalize(norm * 2.0 - 1.0); // Transform from [0,1] to [-1,1]
         norm = normalize(TBN * norm); // Transform to world space
+        norm *= sign(dot(norm, light[i].position - FragPos)); // Ensure normal is facing the light
+        norm *= 0.3;
 
         // diffuse
         if (light[i].type == 0)
@@ -76,24 +78,18 @@ void main()
 
         // ambient
         vec4 ambient = vec4(0.0);
-        vec4 ambColor = texture(material.diffuse, Texture).rgba;
-        ambient += vec4(light[i].ambient, 1.0) * ambColor;
-
-        
-        halfwayDir = normalize(lightDir + viewDir);
-        vec3 reflectDir = reflect(-lightDir, norm);
-        diff = max(dot(norm, lightDir), 0.0);
-        vec3 blendedDir = normalize(mix(reflectDir, halfwayDir, 0.5));
-        
-
         vec4 diffuse = vec4(0.0);
         vec4 specular = vec4(0.0);
-        float shininess = texture(material.specular, Texture).r;
-        spec = pow(max(dot(viewDir, blendedDir), 0.0), (shininess) * 7.0);
-        vec4 difColor = texture(material.diffuse, Texture).rgba;
+
+        vec4 diffColor = texture(material.diffuse, Texture).rgba;
+        ambient += vec4(light[i].ambient, 1.0) * diffColor;
+        halfwayDir = normalize(lightDir + viewDir);
+        diff = max(dot(halfwayDir, norm), 0.0);
         vec4 specColor = texture(material.specular, Texture).rgba;
-        diffuse += vec4(light[i].diffuse, 1) * diff * difColor;
-        specular += vec4(light[i].specular, 1) * spec * specColor;
+        float shininess = ((specColor.r + specColor.g + specColor.b) / 3.0);
+        spec = pow(max(dot(halfwayDir, norm), 0.0), shininess);
+        diffuse += vec4(light[i].diffuse, 1.0) * diff * diffColor;
+        specular += vec4(light[i].specular, 1.0) * spec * specColor;
 
         if(light[i].type == 2)
         {
@@ -107,15 +103,16 @@ void main()
         // attenuation apply
         if (light[i].type == 1 || light[i].type == 2)
         {
-            ambient  *= (attenuation * 2.0);
-            diffuse  *= (attenuation * 2.0);
-            specular *= (attenuation * 2.0);
+            ambient  *= attenuation;
+            diffuse  *= attenuation;
+            specular *= attenuation;
         }
 
         ambient *= 0.1;
         
-        result += (ambient + (diffuse + specular));
+        result += (ambient + diffuse + specular);
         //result += (ambient + (1.0 - shadow) * (diffuse + specular));
+        //result += specular;
     }
     result.a = texture(material.diffuse, Texture).a;
     FragColor = vec4(result);

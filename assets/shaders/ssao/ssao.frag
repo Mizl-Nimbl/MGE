@@ -25,7 +25,7 @@ void main()
     mat3 TBN = mat3(tangent, bitangent, normal);
 
     float occlusion = 0.0;
-    for(int i = 0; i < 64; ++i)
+    for(int i = 0; i < 8; ++i)
     {
         vec3 sample = TBN * samples[i];
         sample = fragPos + sample * radius;
@@ -41,5 +41,4 @@ void main()
     }
     occlusion = 1.0 - (occlusion / 64.0);
     FragColor = occlusion;
-    //FragColor = vec4(1.0);
 }
