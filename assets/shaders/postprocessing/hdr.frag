@@ -8,10 +8,13 @@ uniform sampler2D ssao;
 
 void main()
 {
-    const float gamma = 1.0;
-    const float saturation = 1.6;
+    const float gamma = 1.4;
+    const float saturation = 1.4;
+
     vec3 hdrColor = texture(screen, TexCoords).rgb;
-  
+
+    hdrColor.b *= 1.1;
+
     // Reinhard tone mapping
     vec3 mapped = hdrColor / (hdrColor + vec3(1.0));
     

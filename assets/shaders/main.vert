@@ -27,5 +27,5 @@ void main()
     vec3 B = cross(N, T);
     TBN = mat3(T, B, N);
     FragPos = vec3(model * vec4(aPos, 1.0));
-    TangentFragPos = TBN * FragPos;
+    TangentFragPos = FragPos;
 }

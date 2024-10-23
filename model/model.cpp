@@ -135,7 +135,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 
         vertices.push_back(vertex);
     }
-    /*
+
     for (unsigned int i = 0; i < mesh->mNumFaces; i++) {
         aiFace face = mesh->mFaces[i];
         unsigned int idx0 = face.mIndices[0];
@@ -178,7 +178,6 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
         vertices[i].tangent = glm::normalize(vertices[i].tangent);
         vertices[i].bitangent = glm::normalize(vertices[i].bitangent);
     }
-    */
 
     for(unsigned int i = 0; i < mesh->mNumFaces; i++)
     {

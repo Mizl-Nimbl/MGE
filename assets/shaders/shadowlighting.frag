@@ -56,24 +56,29 @@ void main()
         float diff;
         float spec;
 
-        viewDir = normalize((TBN * viewPos) - FragPos);
+        float maxFactor = 0.4;
+
+        viewDir = normalize(viewPos - FragPos);
+        viewDir = normalize(TBN * viewDir);
         norm = texture(material.texture_normal, Texture).rgb;
         
-        norm = normalize(TBN * norm); // Transform to world space
         norm = normalize(norm * 2.0 - 1.0); // Transform from [0,1] to [-1,1]
+        norm = normalize(TBN * norm); // Transform to world space
 
         // diffuse
         if (light[i].type == 0)
         {
             attenuation = 1.0;
-            lightDir = normalize(TBN * -light[i].direction);
+            lightDir = normalize(-light[i].direction);
         }
         else
         {
-            lightDir = normalize((TBN * light[i].position) - FragPos);
-            distance = length(TBN * light[i].position - FragPos);
+            lightDir = normalize(light[i].position - FragPos);
+            distance = length(light[i].position - FragPos);
             attenuation = 1.0 / (light[i].constant + light[i].linear * distance + light[i].quadratic * (distance * distance));
         }
+        lightDir = normalize(TBN * lightDir);
+        halfwayDir = normalize(lightDir + viewDir);
 
         // ambient
         vec4 ambient = vec4(0.0);
@@ -81,12 +86,13 @@ void main()
         vec4 specular = vec4(0.0);
 
         vec4 diffColor = texture(material.texture_diffuse, Texture).rgba;
-        ambient += vec4(light[i].ambient, 1.0) * diffColor;
-        halfwayDir = normalize(lightDir + viewDir);
-        diff = max(dot(halfwayDir, norm), 0.0);
+        diff = max(dot(halfwayDir, norm), maxFactor);
+
         vec4 specColor = texture(material.texture_specular, Texture).rgba;
         float shininess = ((specColor.r + specColor.g + specColor.b) / 3.0);
-        spec = pow(max(dot(halfwayDir, norm), 0.0), shininess);
+        spec = pow(max(dot(halfwayDir, norm), maxFactor), shininess);
+
+        ambient += vec4(light[i].ambient, 1.0) * diffColor;
         diffuse += vec4(light[i].diffuse, 1.0) * diff * diffColor;
         specular += vec4(light[i].specular, 1.0) * spec * specColor;
 

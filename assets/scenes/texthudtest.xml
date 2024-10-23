@@ -1,5 +1,6 @@
 <Scene>
     <GameState>Menu</GameState>
+    <!--
     <Text>
         <Data>Helminth</Data>
         <Font>/home/mizl/Documents/MGE/assets/fonts/gamefont01.ttf</Font>
@@ -40,4 +41,5 @@
         <Scale>1.2</Scale>
         <Color r="255" g="122" b="0" />
     </Text>
+    -->
 </Scene>
