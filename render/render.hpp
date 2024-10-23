@@ -25,6 +25,7 @@ public:
     void initializeskybox();
     void initializeSSAO();
     void initializescenes();
+    void initializelights();
     void initializeText();
     void renderScene(Shader* shader);
     void render(GLFWwindow* window);
@@ -55,6 +56,7 @@ public:
     glm::vec3 cameraFront;
 
     std::vector <Scene> scenes;
+    std::vector <Light> lights;
 
     //use skybox
     std::vector<std::string> faces = 

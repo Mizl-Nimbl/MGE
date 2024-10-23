@@ -43,9 +43,9 @@
     <Light>
         <Name>Light1</Name>
         <Type>1</Type>
-        <Location x="0.0" y="3.0" z="0.0" />
+        <Location x="0.0" y="3.0" z="5.0" />
         <Color r="255.0" g="255.0" b="255.0" a="255.0"/>
         <Direction x="0.0" y="0.0" z="0.0" />
-        <AttenuationMod>0.0</AttenuationMod>
+        <AttenuationMod>2.0</AttenuationMod>
     </Light>
 </Scene>

@@ -217,6 +217,7 @@ Scene::Scene(std::string path)
         glm::vec3 position;
         glm::vec3 direction;
         float attenuation;
+        int type;
         tinyxml2::XMLElement* lightPositionElement = lightElement->FirstChildElement("Location");
         glm::vec3 pos;
         if (lightPositionElement) 
@@ -248,11 +249,12 @@ Scene::Scene(std::string path)
             blue = col.z;
             alpha = col.w;
         }
-        int type;
+        int t;
         tinyxml2::XMLElement* lightTypeElement = lightElement->FirstChildElement("Type");
         if (lightTypeElement) 
         {
-            lightTypeElement->QueryIntText(&type);
+            lightTypeElement->QueryIntText(&t);
+            type = t;
         }
         float att;
         tinyxml2::XMLElement* lightAttenElement = lightElement->FirstChildElement("AttenuationMod");
@@ -260,23 +262,27 @@ Scene::Scene(std::string path)
         {
             lightAttenElement->QueryFloatText(&att);
             attenuation = att;
+            std::cout << "Attenuation: " << att << std::endl;
         }
-        if (type = 0)
+        if (type == 0)
         {
             Light light(red, green, blue, alpha, dir);
             lights.push_back(light);
+            std::cout << "DirectionalLight loaded." << std::endl;
         }
-        if (type = 1)
+        if (type == 1)
         {
             Light light(red, green, blue, alpha, pos, attenuation);
             lights.push_back(light);
+            std::cout << "PointLight loaded." << std::endl;
         }
-        if (type = 2)
+        if (type == 2)
         {
             Light light(red, green, blue, alpha, pos, dir, attenuation);
             lights.push_back(light);
+            std::cout << "SpotLight loaded." << std::endl;
         }
-        std::cout << "Light object loaded." << std::endl;
+        
     }
 
     std::cout << "Loaded scene with " << modelCount << " models and " << audios.size() << " audio files and " << texts.size() << " text objects and " << lights.size() << " lights." << std::endl;

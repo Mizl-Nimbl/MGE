@@ -61,7 +61,7 @@ void main()
         norm = normalize(norm * 2.0 - 1.0); // Transform from [0,1] to [-1,1]
         norm = normalize(TBN * norm); // Transform to world space
         norm *= sign(dot(norm, light[i].position - FragPos)); // Ensure normal is facing the light
-        norm *= 0.3;
+        norm *= 0.9;
 
         // diffuse
         if (light[i].type == 0)
