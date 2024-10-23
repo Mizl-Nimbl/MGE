@@ -78,7 +78,7 @@ void Mesh::Draw(std::vector<Texture> meshtextures)
         g.setFloat(("material." + name + number).c_str(), i);
         glBindTexture(GL_TEXTURE_2D, textures[i].id);
     }
-    //glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

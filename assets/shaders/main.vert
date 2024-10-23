@@ -7,6 +7,7 @@ layout (location = 4) in vec3 aBitangent;
 
 out vec2 Texture;
 out vec3 FragPos;
+out vec3 TangentFragPos;
 out vec4 FragPosLightSpace;
 out mat3 TBN;
 
@@ -20,10 +21,11 @@ void main()
     mat3 normalMatrix = transpose(inverse(mat3(model)));
     gl_Position = proj * view * model * vec4(aPos, 1.0);
     Texture = aTexture;
-    vec3 T = normalize(vec3(model * vec4(aTangent, 0.0)));
-    vec3 N = normalize(vec3(model * vec4(aNormal, 0.0)));
+    vec3 T = normalize(normalMatrix * aTangent);
+    vec3 N = normalize(normalMatrix * aNormal);
     T = normalize(T - dot(T, N) * N);
     vec3 B = cross(N, T);
     TBN = mat3(T, B, N);
     FragPos = vec3(model * vec4(aPos, 1.0));
+    TangentFragPos = TBN * FragPos;
 }
