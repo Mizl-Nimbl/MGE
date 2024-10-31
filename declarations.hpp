@@ -15,6 +15,7 @@ class Audiobank;
 class SignalEmitter;
 class Font;
 class Physics;
+class LuaLinker;
 
 extern Systems s;
 extern Render r;
@@ -30,5 +31,6 @@ extern Audiobank b;
 extern SignalEmitter e;
 extern Font f;
 extern Physics p;
+extern LuaLinker u;
 
 #endif /* declarations_hpp */

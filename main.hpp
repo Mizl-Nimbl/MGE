@@ -15,6 +15,7 @@
 #include "signalemitter/signalemitter.cpp"
 #include "font/font.cpp"
 #include "physics/physics.cpp"
+#include "lualinker/lualinker.cpp"
 #include "declarations.hpp"
 
 class Main 

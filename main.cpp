@@ -16,6 +16,7 @@ Audiobank b;
 SignalEmitter e;
 Font f;
 Physics p;
+LuaLinker u;
 
 int main() 
 {
@@ -28,6 +29,7 @@ int main()
         r.initializescenes();
         r.initializeText();
         r.initializelights();
+        u.initialize();
         m.running = true;
         //this code needs to be HERE and NOT in s.initialize
         std::string vertexshadersource = g.readShader("/home/mizl/Documents/MGE/assets/shaders/main.vert");
@@ -40,6 +42,7 @@ int main()
         {
             m.stop();
         }
+        u.runscripts();
         i.processInput(s.window);
         b.playaudiobank(b.audiobank);
         p.ProcessPhysics(s.scenes);
